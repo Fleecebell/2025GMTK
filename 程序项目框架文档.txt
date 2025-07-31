@@ -1,0 +1,343 @@
+一、核心系统架构
+1. 游戏管理核心 (Game Core)
+// 游戏主循环管理器 (SRP: 只负责游戏状态流转)
+public class GameManager : MonoBehaviour
+{
+    // 管理游戏状态切换
+    void UpdateGameState()
+    void EndGame()
+    void RestartLevel()
+}
+// 游戏状态接口 (ISP: 状态接口分离)
+public interface IGameState
+{
+    void Enter();
+    void Update();
+    void Exit();
+}
+// 具体状态实现 (OCP: 新增状态只需派生)
+public class MenuState : IGameState
+public class PlayingState : IGameState  
+public class GameOverState : IGameState​
+2. 事件系统 (Event System)
+// 事件管理器 (SRP: 只负责事件分发)
+public class EventManager : MonoBehaviour
+{
+    void Subscribe<T>(Action<T> handler)
+    void Unsubscribe<T>(Action<T> handler)
+    void Publish<T>(T eventData)
+}
+// 游戏事件定义
+public struct PlayerDeathEvent { }
+public struct SanValueChangedEvent { int NewValue; }
+public struct EnemyDefeatedEvent { Enemy enemy; }​
+二、玩家与属性系统
+3. 玩家属性管理
+// 玩家属性接口 (ISP: 分离不同属性关注点)
+public interface IHealthSystem
+{
+    int CurrentHP { get; }
+    int MaxHP { get; }
+    void TakeDamage(int damage);
+    void Heal(int amount);
+}
+public interface ISanitySystem  
+{
+    int CurrentSan { get; }
+    int MaxSan { get; }
+    void LoseSanity(int amount);
+    void RestoreSanity(int amount);
+}
+// 玩家控制器 (SRP: 只负责玩家行为协调)
+public class Player : MonoBehaviour, IHealthSystem, ISanitySystem
+{
+    // 属性系统委托给专门的组件
+    [SerializeField] private HealthComponent healthComponent;
+    [SerializeField] private SanityComponent sanityComponent;
+    
+    void Move(Vector2 direction)
+    void Attack()
+    void UseSkill(int skillIndex)
+}​
+三、地图与关卡系统
+4. 地图生成系统
+// 地图生成接口 (DIP: 依赖抽象)
+public interface IMapGenerator
+{
+    MapData GenerateMap(MapConfig config);
+}
+// 房间数据结构 (SRP: 只存储房间信息)
+public class RoomData
+{
+    public RoomType Type { get; set; }
+    public Vector2Int Position { get; set; }
+    public List<EnemySpawnData> Enemies { get; set; }
+}
+// 地图管理器 (SRP: 只负责地图管理)
+public class MapManager : MonoBehaviour
+{
+    void LoadMap(MapData mapData)
+    void UnloadCurrentMap()
+    RoomData GetCurrentRoom()
+}
+// 具体生成器实现 (OCP: 可扩展不同算法)
+public class RandomMapGenerator : IMapGenerator
+public class PredefinedMapGenerator : IMapGenerator​
+5. 房间系统
+// 房间控制器 (SRP: 只负责房间逻辑)
+public class Room : MonoBehaviour
+{
+    public RoomType Type { get; private set; }
+    
+    void OnPlayerEnter()
+    void OnPlayerExit()
+    bool IsCleared()
+}
+// 房间类型策略 (Strategy Pattern + OCP)
+public interface IRoomBehavior
+{
+    void OnEnter(Player player);
+    void OnExit(Player player);
+}
+public class BattleRoomBehavior : IRoomBehavior
+public class TreasureRoomBehavior : IRoomBehavior
+public class ShopRoomBehavior : IRoomBehavior​
+四、战斗系统
+6. 战斗管理
+// 战斗系统接口 (ISP: 分离战斗关注点)
+public interface ICombatSystem
+{
+    void StartCombat(List<Enemy> enemies);
+    void EndCombat();
+    bool IsInCombat { get; }
+}
+public interface IDamageable
+{
+    void TakeDamage(int damage, DamageType type);
+    bool IsDead { get; }
+}
+public interface IHealable
+{
+    bool CanBeHealed { get; }
+    void Heal(int amount);
+}
+// 战斗管理器 (SRP: 只负责战斗流程)
+public class CombatManager : MonoBehaviour, ICombatSystem
+{
+    void ProcessAttack(IAttacker attacker, IDamageable target)
+    void ProcessHeal(IHealer healer, IHealable target)
+}​
+7. 武器系统
+// 武器接口 (ISP: 武器行为分离)
+public interface IWeapon
+{
+    string Name { get; }
+    int Damage { get; }
+    float AttackSpeed { get; }
+    void Attack(Vector2 direction);
+}
+// 武器基类 (LSP: 子类可替换父类)
+public abstract class Weapon : ScriptableObject, IWeapon
+{
+    public abstract void Attack(Vector2 direction);
+}
+// 具体武器实现 (OCP: 新武器只需派生)
+public class Sword : Weapon
+public class Bow : Weapon
+public class MagicStaff : Weapon
+// 武器管理器
+public class WeaponManager : MonoBehaviour
+{
+    void EquipWeapon(IWeapon weapon)
+    void UnequipWeapon()
+    IWeapon GetCurrentWeapon()
+}​
+五、技能系统
+8. 技能框架
+// 技能接口 (ISP: 技能类型分离)
+public interface ISkill
+{
+    string Name { get; }
+    bool CanUse();
+    void Use();
+}
+public interface IActiveSkill : ISkill
+{
+    float Cooldown { get; }
+    float ManaCost { get; }
+}
+public interface IPassiveSkill : ISkill
+{
+    void OnEquip();
+    void OnUnequip();
+}
+// 技能基类 (Template Method Pattern)
+public abstract class Skill : ScriptableObject, ISkill
+{
+    public abstract bool CanUse();
+    public abstract void Use();
+}
+// 技能管理器
+public class SkillManager : MonoBehaviour
+{
+    void LearnSkill(ISkill skill)
+    void UseSkill(int skillIndex)
+    List<ISkill> GetAvailableSkills()
+}​
+六、背包与道具系统
+9. 背包系统
+// 背包接口 (ISP: 背包操作分离)
+public interface IInventory
+{
+    bool AddItem(IItem item);
+    bool RemoveItem(IItem item);
+    IItem GetItem(int index);
+    int GetItemCount();
+}
+// 背包实现 (SRP: 只负责物品存储)
+public class Inventory : MonoBehaviour, IInventory
+{
+    private List<IItem> items;
+    
+    bool HasSpace()
+    void SortItems()
+}​
+10. 道具系统
+// 道具接口层次 (ISP: 道具功能分离)
+public interface IItem
+{
+    string Name { get; }
+    string Description { get; }
+    Sprite Icon { get; }
+}
+public interface IUsableItem : IItem
+{
+    bool CanUse();
+    void Use(Player player);
+}
+public interface IEquippableItem : IItem
+{
+    EquipmentSlot Slot { get; }
+    void OnEquip(Player player);
+    void OnUnequip(Player player);
+}
+// 道具基类 (LSP: 保证替换性)
+public abstract class Item : ScriptableObject, IItem
+{
+    public string Name { get; protected set; }
+    public string Description { get; protected set; }
+    public Sprite Icon { get; protected set; }
+}
+// 具体道具实现 (OCP: 新道具只需派生)
+public class HealthPotion : Item, IUsableItem
+public class Equipment : Item, IEquippableItem
+public class WeaponItem : Equipment​
+七、敌人系统
+11. 敌人框架
+// 敌人接口 (ISP: 敌人行为分离)
+public interface IEnemy : IDamageable, IHealable
+{
+    void Initialize(EnemyData data);
+    void StartAI();
+    void StopAI();
+}
+// 敌人基类 (Template Method + LSP)
+public abstract class Enemy : MonoBehaviour, IEnemy
+{
+    protected EnemyData enemyData;
+    protected StateMachine<Enemy> stateMachine;
+    
+    public abstract void Initialize(EnemyData data);
+    public virtual void TakeDamage(int damage, DamageType type)
+    public virtual void Heal(int amount)
+}
+// 具体敌人实现 (OCP: 新敌人类型)
+public class BasicEnemy : Enemy
+public class BossEnemy : Enemy
+public class HealableEnemy : Enemy​
+12. AI状态机
+// 状态机组件 (Composition over Inheritance)
+public class StateMachine<T> where T : class
+{
+    void ChangeState(IState<T> newState)
+    void Update()
+}
+// AI状态接口
+public interface IState<T>
+{
+    void Enter(T owner);
+    void Update(T owner);
+    void Exit(T owner);
+}
+// 可复用的AI状态 (RP: 状态可复用)
+public class IdleState : IState<Enemy>
+public class ChaseState : IState<Enemy>
+public class AttackState : IState<Enemy>
+public class FleeState : IState<Enemy>​
+八、Buff与效果系统
+13. 效果系统
+// 效果接口 (ISP: 效果类型分离)
+public interface IEffect
+{
+    string Name { get; }
+    float Duration { get; }
+    void Apply(GameObject target);
+    void Remove(GameObject target);
+    bool IsExpired();
+}
+// 效果管理器 (SRP: 只负责效果管理)
+public class EffectManager : MonoBehaviour
+{
+    void AddEffect(IEffect effect, GameObject target)
+    void RemoveEffect(IEffect effect, GameObject target)
+    List<IEffect> GetActiveEffects(GameObject target)
+}
+// 具体效果实现 (OCP: 新效果只需派生)
+public class HealthBoostEffect : IEffec
+tpublic class DamageOverTimeEffect : IEffect
+public class SpeedBoostEffect : IEffect​
+九、UI系统
+14. UI框架
+// UI面板基类 (Template Method
+)public abstract class UIPanel : MonoBehaviour
+{
+    public abstract void Initialize();
+    public virtual void Show()
+    public virtual void Hide()
+    protected abstract void BindEvents();
+}
+// 具体UI面板 (OCP: 新面板只需派生)
+public class PlayerStatusUI : UIPanel
+public class InventoryUI : UIPanel
+public class SkillUI : UIPanel
+public class GameOverUI : UIPanel
+// UI管理器 (SRP: 只负责UI切换)
+public class UIManager : MonoBehaviour
+{
+    void ShowPanel<T>() where T : UIPanel
+    void HidePanel<T>() where T : UIPanel
+    void HideAllPanels()
+}​
+十、数据与配置
+15. 数据系统
+
+// 数据接口 (DIP: 依赖抽象)
+public interface IDataProvider
+{
+    T LoadData<T>(string key);
+    void SaveData<T>(string key, T data);
+}
+// 配置数据 (SRP: 各系统配置分离)
+[CreateAssetMenu]public class GameConfig : ScriptableObject
+{
+    public PlayerConfig playerConfig;
+    public MapConfig mapConfig;
+    public EnemyConfig[] enemyConfigs;
+}
+// 数据管理器
+public class DataManager : MonoBehaviour
+{
+    void SaveGameData()
+    void LoadGameData()
+    void ResetGameData()
+}
