@@ -5,16 +5,17 @@ using UnityEngine;
 public class Player : MonoBehaviour
 {
     public float speed = 5.0f;
-    public float jumpHeight = 1.0f;
-    public float gravity = -9.8f;
-    private float speedY; // å‚ç›´é€Ÿåº¦
-    private Rigidbody2D rb; // 2Dåˆšä½“
-    private CapsuleCollider2D capsuleCollider; // 2Dç¢°æ’å™¨
+
+    private Rigidbody2D rb; // 2D¸ÕÌå
+    private CapsuleCollider2D capsuleCollider; // 2DÅö×²Æ÷
+    private SpriteRenderer spriteRenderer; // Ìí¼ÓSpriteRenderer×é¼ş
 
     void Start()
     {
-        rb = GetComponent<Rigidbody2D>(); // è·å–2Dåˆšä½“ç»„ä»¶
-        capsuleCollider = GetComponent<CapsuleCollider2D>(); // è·å–2Dç¢°æ’å™¨ç»„ä»¶
+        rb = GetComponent<Rigidbody2D>(); // »ñÈ¡2D¸ÕÌå×é¼ş
+        capsuleCollider = GetComponent<CapsuleCollider2D>(); // »ñÈ¡2DÅö×²Æ÷×é¼ş
+        spriteRenderer = GetComponent<SpriteRenderer>(); // »ñÈ¡SpriteRenderer×é¼ş
+
     }
 
     void Update()
@@ -27,6 +28,16 @@ public class Player : MonoBehaviour
         float horizontal = Input.GetAxis("Horizontal");
         float vertical = Input.GetAxis("Vertical");
         Vector2 move = new Vector2(horizontal, vertical);
-        rb.velocity = move * speed; // è®¾ç½®é€Ÿåº¦
+        rb.velocity = move * speed; // ÉèÖÃËÙ¶È
+
+        // ·­×ªSpriteRendererµÄxÖá
+        if (horizontal < 0)
+        {
+            spriteRenderer.flipX = true;
+        }
+        else if (horizontal > 0)
+        {
+            spriteRenderer.flipX = false;
+        }
     }
 }

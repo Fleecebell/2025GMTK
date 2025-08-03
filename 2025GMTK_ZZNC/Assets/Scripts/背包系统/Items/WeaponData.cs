@@ -13,17 +13,20 @@ namespace InventorySystem.Items
     public class WeaponData : BaseItemData
     {
         [Header("武器属性")]
-        [SerializeField] private AttackType attackType;
-        [SerializeField] private float damage;
-        [SerializeField] private float attackSpeed;
-        
+        [SerializeField] public AttackType attackType;
+        [SerializeField] public float power;//力量
+        [SerializeField] public float belief;//信仰
+        [SerializeField] public float attackSpeed;
+        [SerializeField] public float critical;//暴击率
+
         [Header("视觉效果")]
+        public GameObject attackInstance;
         [SerializeField] private GameObject attackEffect;
         [SerializeField] private AudioClip attackSound;
 
         // 只读属性访问器
         public AttackType AttackType => attackType;
-        public float Damage => damage;
+        public float Damage => power;
         public float AttackSpeed => attackSpeed;
         public GameObject AttackEffect => attackEffect;
         public AudioClip AttackSound => attackSound;
@@ -45,7 +48,7 @@ namespace InventorySystem.Items
         {
             string baseInfo = base.GetDetailedInfo();
             string weaponInfo = $"\n<color=yellow>攻击方式:</color> {GetAttackTypeDisplayName()}" +
-                               $"\n<color=red>伤害:</color> {damage}" +
+                               $"\n<color=red>伤害:</color> {power}" +
                                $"\n<color=green>攻击速度:</color> {attackSpeed}";
             
             return baseInfo + weaponInfo;
@@ -76,7 +79,7 @@ namespace InventorySystem.Items
         public override bool IsValid()
         {
             return base.IsValid() && 
-                   damage > 0 && 
+                   power > 0 && 
                    attackSpeed > 0;
         }
 
@@ -101,7 +104,7 @@ namespace InventorySystem.Items
         /// <returns>DPS值</returns>
         public float GetDPS()
         {
-            return damage * attackSpeed;
+            return power * attackSpeed;
         }
     }
 }

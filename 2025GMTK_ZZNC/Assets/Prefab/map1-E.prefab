@@ -5558,6 +5558,7 @@ GameObject:
   - component: {fileID: 3387454197285678108}
   - component: {fileID: 7901434606199081998}
   - component: {fileID: 5217301426605255219}
+  - component: {fileID: 640178878230856684}
   m_Layer: 0
   m_Name: Grid
   m_TagString: Untagged
@@ -6978,6 +6979,22 @@ CompositeCollider2D:
   m_OffsetDistance: 0.00005
   m_UseDelaunayMesh: 0
   m_CompositeGameObject: {fileID: 4625001062491137236}
+--- !u!114 &640178878230856684
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4625001062491137236}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9809bf1345abc5648af68b3a82653f08, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_OverrideArea: 1
+  m_Area: 1
+  m_IgnoreFromBuild: 0
+  m_AffectedAgents: ffffffff
 --- !u!1 &7705071458807467532
 GameObject:
   m_ObjectHideFlags: 0
@@ -6993,6 +7010,7 @@ GameObject:
   - component: {fileID: 4055503939554687588}
   - component: {fileID: 7657199932820304337}
   - component: {fileID: 6214311805026648536}
+  - component: {fileID: 3996198296170454055}
   m_Layer: 0
   m_Name: trigger
   m_TagString: Untagged
@@ -7375,6 +7393,22 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   roomCamera: {fileID: 9019731579491919466}
   unexploredBlack: {fileID: 833694728035797779}
+--- !u!114 &3996198296170454055
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7705071458807467532}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9809bf1345abc5648af68b3a82653f08, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_OverrideArea: 1
+  m_Area: 1
+  m_IgnoreFromBuild: 0
+  m_AffectedAgents: ffffffff
 --- !u!1 &8611251657022807963
 GameObject:
   m_ObjectHideFlags: 0
@@ -7386,6 +7420,7 @@ GameObject:
   - component: {fileID: 9132814606313409935}
   - component: {fileID: 6182861817529436021}
   - component: {fileID: 1525074928747656078}
+  - component: {fileID: -4480210165124463068}
   m_Layer: 0
   m_Name: map1-E
   m_TagString: Untagged
@@ -10184,6 +10219,22 @@ TilemapRenderer:
   m_Mode: 0
   m_DetectChunkCullingBounds: 0
   m_MaskInteraction: 0
+--- !u!114 &-4480210165124463068
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8611251657022807963}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9809bf1345abc5648af68b3a82653f08, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_OverrideArea: 0
+  m_Area: 0
+  m_IgnoreFromBuild: 0
+  m_AffectedAgents: ffffffff
 --- !u!1 &9019731579491919466
 GameObject:
   m_ObjectHideFlags: 0

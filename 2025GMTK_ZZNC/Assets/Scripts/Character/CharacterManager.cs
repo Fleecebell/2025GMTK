@@ -267,17 +267,6 @@ namespace InventorySystem.Character
         {
             Debug.Log(GetCharacterStatusDescription());
         }
-
-        /// <summary>
-        /// 测试装备效果
-        /// </summary>
-        [ContextMenu("测试装备效果")]
-        public void TestEquipmentEffect()
-        {
-            var testEquipment = new EquipmentAttributes(20f, 10f, 5f, 3f, 1f);
-            ApplyEquipmentBonus(testEquipment, true);
-        }
-
         /// <summary>
         /// 销毁时清理
         /// </summary>

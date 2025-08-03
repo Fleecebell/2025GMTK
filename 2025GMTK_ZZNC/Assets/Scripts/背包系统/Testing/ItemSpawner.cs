@@ -82,19 +82,19 @@ namespace InventorySystem.Testing
             if (inventoryManager == null) return;
 
             // A键 - 生成随机武器
-            if (Input.GetKeyDown(KeyCode.A))
+            if (Input.GetKeyDown(KeyCode.U))
             {
                 SpawnRandomWeapon();
             }
 
             // S键 - 生成随机装备
-            if (Input.GetKeyDown(KeyCode.S))
+            if (Input.GetKeyDown(KeyCode.I))
             {
                 SpawnRandomEquipment();
             }
 
             // D键 - 生成随机道具
-            if (Input.GetKeyDown(KeyCode.D))
+            if (Input.GetKeyDown(KeyCode.O))
             {
                 SpawnRandomConsumable();
             }
@@ -219,7 +219,7 @@ namespace InventorySystem.Testing
         private void AutoFindWeapons()
         {
             #if UNITY_EDITOR
-            string[] guids = UnityEditor.AssetDatabase.FindAssets("t:WeaponData", new[] {"Assets/Resources/Items/Weapons"});
+            string[] guids = UnityEditor.AssetDatabase.FindAssets("t:WeaponData", new[] {"Assets/Resources/Data/Items/武器"});
             weaponPool = new WeaponData[guids.Length];
             for (int i = 0; i < guids.Length; i++)
             {
@@ -239,7 +239,7 @@ namespace InventorySystem.Testing
         private void AutoFindEquipments()
         {
             #if UNITY_EDITOR
-            string[] guids = UnityEditor.AssetDatabase.FindAssets("t:EquipmentData", new[] {"Assets/Resources/Items/Equipment"});
+            string[] guids = UnityEditor.AssetDatabase.FindAssets("t:EquipmentData", new[] {"Assets/Resources/Data/Items/神器"});
             equipmentPool = new EquipmentData[guids.Length];
             for (int i = 0; i < guids.Length; i++)
             {
@@ -259,7 +259,7 @@ namespace InventorySystem.Testing
         private void AutoFindConsumables()
         {
             #if UNITY_EDITOR
-            string[] guids = UnityEditor.AssetDatabase.FindAssets("t:ConsumableData", new[] {"Assets/Resources/Items/Consumables"});
+            string[] guids = UnityEditor.AssetDatabase.FindAssets("t:ConsumableData", new[] {"Assets/Resources/Data/Items/消耗品"});
             consumablePool = new ConsumableData[guids.Length];
             for (int i = 0; i < guids.Length; i++)
             {

@@ -15,11 +15,11 @@ namespace InventorySystem.Items
     public class EquipmentData : BaseItemData
     {
         [Header("装备属性")]
-        [SerializeField] private List<AttributeModifier> attributeModifiers = new List<AttributeModifier>();
+        [SerializeField] public List<AttributeModifier> attributeModifiers = new List<AttributeModifier>();
         
         [Header("特殊效果")]
-        [SerializeField] private string specialEffect;
-        [SerializeField] private GameObject equipEffect;
+        [SerializeField] public string specialEffect;
+        [SerializeField] public GameObject equipEffect;
 
         // 只读属性访问器
         public List<AttributeModifier> AttributeModifiers => new List<AttributeModifier>(attributeModifiers);
@@ -128,26 +128,23 @@ namespace InventorySystem.Items
             {
                 switch (modifier.AttributeType)
                 {
-                    case AttributeType.Health:
-                        equipmentAttributes.HealthBonus = modifier.Value;
+                    case AttributeType.power:
+                        equipmentAttributes.PowerBonus = modifier.Value;
                         break;
-                    case AttributeType.San:
-                        equipmentAttributes.SanBonus = modifier.Value;
+                    case AttributeType.armor:
+                        equipmentAttributes.ArmorBonus = modifier.Value;
                         break;
-                    case AttributeType.Attack:
-                        equipmentAttributes.AttackBonus = modifier.Value;
+                    case AttributeType.intelligence:
+                        equipmentAttributes.IntelligenceBonus = modifier.Value;
                         break;
-                    case AttributeType.Defense:
-                        equipmentAttributes.DefenseBonus = modifier.Value;
+                    case AttributeType.attackSpeed:
+                        equipmentAttributes.AttackSpeedBonus = modifier.Value;
                         break;
-                    case AttributeType.MoveSpeed:
+                    case AttributeType.moveSpeed:
                         equipmentAttributes.MoveSpeedBonus = modifier.Value;
                         break;
-                    case AttributeType.CriticalRate:
+                    case AttributeType.critical:
                         equipmentAttributes.CriticalRateBonus = modifier.Value;
-                        break;
-                    case AttributeType.CriticalDamage:
-                        equipmentAttributes.CriticalDamageBonus = modifier.Value;
                         break;
                 }
             }

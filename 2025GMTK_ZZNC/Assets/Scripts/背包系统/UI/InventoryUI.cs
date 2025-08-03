@@ -46,9 +46,10 @@ namespace InventorySystem.UI
         // 私有变量
         private InventoryManager inventoryManager;
         private ItemType currentTab = ItemType.Weapon;
-        private bool isInventoryOpen = false;
         private CanvasGroup itemInfoCanvasGroup;
         private CanvasGroup inventoryCanvasGroup;
+        [Header("快捷键")]
+        [SerializeField] private KeyCode toggleKey = KeyCode.Escape;
 
         /// <summary>
         /// 初始化UI系统
@@ -59,7 +60,34 @@ namespace InventorySystem.UI
             BindEvents();
             RefreshUI();
         }
+        private void Update()
+        {
+            // ESC 监听
+            if (Input.GetKeyDown(toggleKey))
+            {
+                bool isOpen = inventoryCanvasGroup != null
+                              ? inventoryCanvasGroup.alpha > 0.5f
+                              : inventoryPanel.activeInHierarchy;
 
+                if (isOpen)
+                    CloseInventory();
+                else
+                    OpenInventory();
+            }
+
+            // 背包打开时，监听 1/2/3 切换子背包
+            if (inventoryCanvasGroup != null && inventoryCanvasGroup.alpha > 0.5f)
+            {
+                if (Input.GetKeyDown(KeyCode.Alpha1) || Input.GetKeyDown(KeyCode.Keypad1))
+                    SetActiveTab(ItemType.Weapon);
+
+                if (Input.GetKeyDown(KeyCode.Alpha2) || Input.GetKeyDown(KeyCode.Keypad2))
+                    SetActiveTab(ItemType.Equipment);
+
+                if (Input.GetKeyDown(KeyCode.Alpha3) || Input.GetKeyDown(KeyCode.Keypad3))
+                    SetActiveTab(ItemType.Consumable);
+            }
+        }
         /// <summary>
         /// 初始化UI组件
         /// </summary>
@@ -75,12 +103,9 @@ namespace InventorySystem.UI
 
             // 初始化物品信息面板CanvasGroup
             InitializeItemInfoPanel();
-            
+
             // 初始化背包面板CanvasGroup
             InitializeInventoryPanel();
-
-            // 设置初始状态
-            isInventoryOpen = false;
 
             // 设置默认标签页
             SetActiveTab(ItemType.Weapon);
@@ -135,7 +160,7 @@ namespace InventorySystem.UI
         {
             // 背包按钮事件
             if (inventoryButton != null)
-                inventoryButton.onClick.AddListener(ToggleInventory);
+                inventoryButton.onClick.AddListener(OpenInventory);
 
             if (minimizeButton != null)
                 minimizeButton.onClick.AddListener(CloseInventory);
@@ -164,17 +189,6 @@ namespace InventorySystem.UI
         }
 
         /// <summary>
-        /// 切换背包显示状态
-        /// </summary>
-        public void ToggleInventory()
-        {
-            if (isInventoryOpen)
-                CloseInventory();
-            else
-                OpenInventory();
-        }
-
-        /// <summary>
         /// 打开背包
         /// </summary>
         public void OpenInventory()
@@ -182,7 +196,6 @@ namespace InventorySystem.UI
             if (inventoryPanel != null)
             {
                 inventoryPanel.SetActive(true);
-                isInventoryOpen = true;
 
                 if (inventoryCanvasGroup != null)
                 {
@@ -193,6 +206,7 @@ namespace InventorySystem.UI
 
                 RefreshUI();
             }
+            Time.timeScale = 0f;
         }
 
         /// <summary>
@@ -202,17 +216,14 @@ namespace InventorySystem.UI
         {
             if (inventoryPanel != null)
             {
-                isInventoryOpen = false;
-
                 if (inventoryCanvasGroup != null)
                 {
                     inventoryCanvasGroup.alpha = 0f;
                     inventoryCanvasGroup.interactable = false;
                     inventoryCanvasGroup.blocksRaycasts = false;
                 }
-
-                inventoryPanel.SetActive(false);
             }
+            Time.timeScale = 1f;
         }
 
         /// <summary>

@@ -10,39 +10,39 @@ namespace InventorySystem.Character
     public class EquipmentAttributes
     {
         [Header("基础属性加成")]
-        [SerializeField] private float healthBonus = 0f;          // 生命值加成
-        [SerializeField] private float sanBonus = 0f;             // San值加成
-        [SerializeField] private float attackBonus = 0f;          // 攻击力加成
-        [SerializeField] private float defenseBonus = 0f;         // 防御力加成
-        [SerializeField] private float moveSpeedBonus = 0f;       // 移速加成
+        [SerializeField] private float powerBonus = 0f;          // 力量加成
+        [SerializeField] private float armorBonus = 0f;          // 护甲加成
+        [SerializeField] private float intelligenceBonus = 0f;   // 智力加成
+        [SerializeField] private float attackSpeedBonus = 0f;    // 攻击速度加成
+        [SerializeField] private float moveSpeedBonus = 0f;      // 移速加成
+        [SerializeField] private float criticalRateBonus = 0f;   // 暴击率加成
 
         [Header("技能属性加成")]
-        [SerializeField] private float criticalRateBonus = 0f;    // 暴击率加成
-        [SerializeField] private float criticalDamageBonus = 0f;  // 暴击伤害加成
+        [SerializeField] private float criticalDamageBonus = 0f; // 暴击伤害加成
 
         // 属性访问器
-        public float HealthBonus 
+        public float PowerBonus 
         { 
-            get => healthBonus; 
-            set => healthBonus = value; 
+            get => powerBonus; 
+            set => powerBonus = value; 
         }
         
-        public float SanBonus 
+        public float ArmorBonus 
         { 
-            get => sanBonus; 
-            set => sanBonus = value; 
+            get => armorBonus; 
+            set => armorBonus = value; 
         }
         
-        public float AttackBonus 
+        public float IntelligenceBonus 
         { 
-            get => attackBonus; 
-            set => attackBonus = value; 
+            get => intelligenceBonus; 
+            set => intelligenceBonus = value; 
         }
         
-        public float DefenseBonus 
+        public float AttackSpeedBonus 
         { 
-            get => defenseBonus; 
-            set => defenseBonus = value; 
+            get => attackSpeedBonus; 
+            set => attackSpeedBonus = value; 
         }
         
         public float MoveSpeedBonus 
@@ -74,13 +74,14 @@ namespace InventorySystem.Character
         /// <summary>
         /// 带参数的构造函数
         /// </summary>
-        public EquipmentAttributes(float health, float san, float attack, float defense, float moveSpeed)
+        public EquipmentAttributes(float power, float armor, float intelligence, float attackSpeed, float moveSpeed, float critical)
         {
-            healthBonus = health;
-            sanBonus = san;
-            attackBonus = attack;
-            defenseBonus = defense;
+            powerBonus = power;
+            armorBonus = armor;
+            intelligenceBonus = intelligence;
+            attackSpeedBonus = attackSpeed;
             moveSpeedBonus = moveSpeed;
+            criticalRateBonus = critical;
         }
 
         /// <summary>
@@ -90,10 +91,10 @@ namespace InventorySystem.Character
         {
             if (other != null)
             {
-                healthBonus = other.healthBonus;
-                sanBonus = other.sanBonus;
-                attackBonus = other.attackBonus;
-                defenseBonus = other.defenseBonus;
+                powerBonus = other.powerBonus;
+                armorBonus = other.armorBonus;
+                intelligenceBonus = other.intelligenceBonus;
+                attackSpeedBonus = other.attackSpeedBonus;
                 moveSpeedBonus = other.moveSpeedBonus;
                 criticalRateBonus = other.criticalRateBonus;
                 criticalDamageBonus = other.criticalDamageBonus;
@@ -112,36 +113,13 @@ namespace InventorySystem.Character
             float multiplier = isEquipping ? 1f : -1f;
 
             // 应用属性加成
-            characterData.MaxHealth += healthBonus * multiplier;
-            characterData.MaxSan += sanBonus * multiplier;
-            characterData.Attack += attackBonus * multiplier;
-            characterData.Defense += defenseBonus * multiplier;
+            characterData.Power += powerBonus * multiplier;
+            characterData.Armor += armorBonus * multiplier;
+            characterData.Intelligence += intelligenceBonus * multiplier;
+            characterData.AttackSpeed += attackSpeedBonus * multiplier;
             characterData.MoveSpeed += moveSpeedBonus * multiplier;
             characterData.CriticalRate += criticalRateBonus * multiplier;
             characterData.CriticalDamage += criticalDamageBonus * multiplier;
-
-            // 如果是装备操作，需要调整当前生命值和San值
-            if (isEquipping)
-            {
-                // 装备时，如果最大值增加，当前值也按比例增加
-                if (healthBonus > 0)
-                {
-                    float healthRatio = characterData.HealthPercentage;
-                    characterData.CurrentHealth = characterData.MaxHealth * healthRatio;
-                }
-                
-                if (sanBonus > 0)
-                {
-                    float sanRatio = characterData.SanPercentage;
-                    characterData.CurrentSan = characterData.MaxSan * sanRatio;
-                }
-            }
-            else
-            {
-                // 卸下装备时，确保当前值不超过新的最大值
-                characterData.CurrentHealth = Mathf.Min(characterData.CurrentHealth, characterData.MaxHealth);
-                characterData.CurrentSan = Mathf.Min(characterData.CurrentSan, characterData.MaxSan);
-            }
         }
 
         /// <summary>
@@ -149,8 +127,8 @@ namespace InventorySystem.Character
         /// </summary>
         public bool HasAnyBonus()
         {
-            return healthBonus != 0 || sanBonus != 0 || attackBonus != 0 || 
-                   defenseBonus != 0 || moveSpeedBonus != 0 || 
+            return powerBonus != 0 || armorBonus != 0 || intelligenceBonus != 0 || 
+                   attackSpeedBonus != 0 || moveSpeedBonus != 0 || 
                    criticalRateBonus != 0 || criticalDamageBonus != 0;
         }
 
@@ -161,17 +139,17 @@ namespace InventorySystem.Character
         {
             var description = new System.Text.StringBuilder();
 
-            if (healthBonus != 0)
-                description.AppendLine($"生命值: {(healthBonus > 0 ? "+" : "")}{healthBonus:F1}");
+            if (powerBonus != 0)
+                description.AppendLine($"力量: {(powerBonus > 0 ? "+" : "")}{powerBonus:F1}");
             
-            if (sanBonus != 0)
-                description.AppendLine($"San值: {(sanBonus > 0 ? "+" : "")}{sanBonus:F1}");
+            if (armorBonus != 0)
+                description.AppendLine($"护甲: {(armorBonus > 0 ? "+" : "")}{armorBonus:F1}");
             
-            if (attackBonus != 0)
-                description.AppendLine($"攻击力: {(attackBonus > 0 ? "+" : "")}{attackBonus:F1}");
+            if (intelligenceBonus != 0)
+                description.AppendLine($"智力: {(intelligenceBonus > 0 ? "+" : "")}{intelligenceBonus:F1}");
             
-            if (defenseBonus != 0)
-                description.AppendLine($"防御力: {(defenseBonus > 0 ? "+" : "")}{defenseBonus:F1}");
+            if (attackSpeedBonus != 0)
+                description.AppendLine($"攻击速度: {(attackSpeedBonus > 0 ? "+" : "")}{attackSpeedBonus:F1}");
             
             if (moveSpeedBonus != 0)
                 description.AppendLine($"移速: {(moveSpeedBonus > 0 ? "+" : "")}{moveSpeedBonus:F1}");
@@ -198,10 +176,10 @@ namespace InventorySystem.Character
         /// </summary>
         public void Reset()
         {
-            healthBonus = 0f;
-            sanBonus = 0f;
-            attackBonus = 0f;
-            defenseBonus = 0f;
+            powerBonus = 0f;
+            armorBonus = 0f;
+            intelligenceBonus = 0f;
+            attackSpeedBonus = 0f;
             moveSpeedBonus = 0f;
             criticalRateBonus = 0f;
             criticalDamageBonus = 0f;
@@ -214,10 +192,10 @@ namespace InventorySystem.Character
         {
             if (other == null) return;
 
-            healthBonus += other.healthBonus;
-            sanBonus += other.sanBonus;
-            attackBonus += other.attackBonus;
-            defenseBonus += other.defenseBonus;
+            powerBonus += other.powerBonus;
+            armorBonus += other.armorBonus;
+            intelligenceBonus += other.intelligenceBonus;
+            attackSpeedBonus += other.attackSpeedBonus;
             moveSpeedBonus += other.moveSpeedBonus;
             criticalRateBonus += other.criticalRateBonus;
             criticalDamageBonus += other.criticalDamageBonus;
@@ -230,10 +208,10 @@ namespace InventorySystem.Character
         {
             if (other == null) return;
 
-            healthBonus -= other.healthBonus;
-            sanBonus -= other.sanBonus;
-            attackBonus -= other.attackBonus;
-            defenseBonus -= other.defenseBonus;
+            powerBonus -= other.powerBonus;
+            armorBonus -= other.armorBonus;
+            intelligenceBonus -= other.intelligenceBonus;
+            attackSpeedBonus -= other.attackSpeedBonus;
             moveSpeedBonus -= other.moveSpeedBonus;
             criticalRateBonus -= other.criticalRateBonus;
             criticalDamageBonus -= other.criticalDamageBonus;

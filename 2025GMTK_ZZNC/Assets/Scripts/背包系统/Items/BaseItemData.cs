@@ -11,12 +11,15 @@ namespace InventorySystem.Items
     public abstract class BaseItemData : ScriptableObject
     {
         [Header("基础信息")]
-        [SerializeField] protected string itemName;
-        [SerializeField] protected string description;
-        [SerializeField] protected Sprite icon;
-        [SerializeField] protected ItemType itemType;
-        [SerializeField] protected int maxStackSize = 1;
-        [SerializeField] protected bool isConsumable = false;
+        [SerializeField] public string itemName;
+        [SerializeField] public Quality quality; 
+        [SerializeField] public string description;
+        [SerializeField] public Sprite icon;
+        public string iconID;
+        public string price;
+        [SerializeField] public ItemType itemType;
+        [SerializeField] public int maxStackSize = 1;
+        [SerializeField] public bool isConsumable = false;
 
         // 只读属性，保证数据封装性
         public string ItemName => itemName;

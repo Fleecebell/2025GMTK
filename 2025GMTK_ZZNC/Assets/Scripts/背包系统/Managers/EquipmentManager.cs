@@ -8,28 +8,28 @@ using InventorySystem.Character;
 namespace InventorySystem.Managers
 {
     /// <summary>
-    /// è£…å¤‡ç®¡ç†å™¨ - ç®¡ç†ç©å®¶å½“å‰è£…å¤‡å’Œè£…å¤‡æ•ˆæœ
-    /// éµå¾ªå•ä¸€èŒè´£åŸåˆ™ä¸“é—¨å¤„ç†è£…å¤‡ç›¸å…³é€»è¾‘
+    /// ×°±¸¹ÜÀíÆ÷ - ¹ÜÀíÍæ¼Òµ±Ç°×°±¸ºÍ×°±¸Ğ§¹û
+    /// ×ñÑ­µ¥Ò»Ö°ÔğÔ­Ôò£¬×¨ÃÅ´¦Àí×°±¸Ïà¹ØÂß¼­
     /// </summary>
     public class EquipmentManager : MonoBehaviour
     {
-        [Header("è£…å¤‡æ ä½")]
+        [Header("×°±¸²ÛÎ»")]
         [SerializeField] private WeaponData currentWeapon;
         [SerializeField] private List<EquipmentData> equippedItems = new List<EquipmentData>();
 
-        // äº‹ä»¶ç³»ç»Ÿ
+        // ÊÂ¼şÏµÍ³
         public event Action<WeaponData> OnWeaponEquipped;
         public event Action<WeaponData> OnWeaponUnequipped;
         public event Action<EquipmentData> OnEquipmentEquipped;
         public event Action<EquipmentData> OnEquipmentUnequipped;
         public event Action OnEquipmentChanged;
 
-        // åªè¯»å±æ€§
+        // Ö»¶ÁÊôĞÔ
         public WeaponData CurrentWeapon => currentWeapon;
         public List<EquipmentData> EquippedItems => new List<EquipmentData>(equippedItems);
 
         /// <summary>
-        /// åˆå§‹åŒ–è£…å¤‡ç®¡ç†å™¨
+        /// ³õÊ¼»¯×°±¸¹ÜÀíÆ÷
         /// </summary>
         private void Awake()
         {
@@ -37,41 +37,41 @@ namespace InventorySystem.Managers
         }
 
         /// <summary>
-        /// è£…å¤‡æ­¦å™¨
+        /// ×°±¸ÎäÆ÷
         /// </summary>
-        /// <param name="weaponData">æ­¦å™¨æ•°æ®</param>
-        /// <returns>æ˜¯å¦è£…å¤‡æˆåŠŸ</returns>
+        /// <param name="weaponData">ÎäÆ÷Êı¾İ</param>
+        /// <returns>ÊÇ·ñ×°±¸³É¹¦</returns>
         public bool EquipWeapon(WeaponData weaponData)
         {
             if (weaponData == null)
             {
-                Debug.LogWarning("æ­¦å™¨æ•°æ®ä¸ºç©º");
+                Debug.LogWarning("ÎäÆ÷Êı¾İÎª¿Õ");
                 return false;
             }
 
-            // å¸ä¸‹å½“å‰æ­¦å™¨
+            // Ğ¶ÏÂµ±Ç°ÎäÆ÷
             WeaponData previousWeapon = currentWeapon;
             if (previousWeapon != null)
             {
                 UnequipWeapon();
             }
 
-            // è£…å¤‡æ–°æ­¦å™¨
+            // ×°±¸ĞÂÎäÆ÷
             currentWeapon = weaponData;
             ApplyWeaponEffects(weaponData);
 
-            // è§¦å‘äº‹ä»¶
+            // ´¥·¢ÊÂ¼ş£¨WeaponInstanceManager»á¼àÌıÕâ¸öÊÂ¼şÀ´´´½¨ÎäÆ÷ÊµÀı£©
             OnWeaponEquipped?.Invoke(weaponData);
             OnEquipmentChanged?.Invoke();
 
-            Debug.Log($"è£…å¤‡æ­¦å™¨: {weaponData.ItemName}");
+            Debug.Log($"×°±¸ÎäÆ÷: {weaponData.ItemName}");
             return true;
         }
 
         /// <summary>
-        /// å¸ä¸‹æ­¦å™¨
+        /// Ğ¶ÏÂÎäÆ÷
         /// </summary>
-        /// <returns>è¢«å¸ä¸‹çš„æ­¦å™¨</returns>
+        /// <returns>±»Ğ¶ÏÂµÄÎäÆ÷</returns>
         public WeaponData UnequipWeapon()
         {
             if (currentWeapon == null)
@@ -79,75 +79,75 @@ namespace InventorySystem.Managers
 
             WeaponData unequippedWeapon = currentWeapon;
             
-            // ç§»é™¤æ­¦å™¨æ•ˆæœ
+            // ÒÆ³ıÎäÆ÷Ğ§¹û
             RemoveWeaponEffects(currentWeapon);
             
-            // æ¸…ç©ºå½“å‰æ­¦å™¨
+            // Çå¿Õµ±Ç°ÎäÆ÷
             currentWeapon = null;
 
-            // è§¦å‘äº‹ä»¶
+            // ´¥·¢ÊÂ¼ş£¨WeaponInstanceManager»á¼àÌıÕâ¸öÊÂ¼şÀ´Ïú»ÙÎäÆ÷ÊµÀı£©
             OnWeaponUnequipped?.Invoke(unequippedWeapon);
             OnEquipmentChanged?.Invoke();
 
-            Debug.Log($"å¸ä¸‹æ­¦å™¨: {unequippedWeapon.ItemName}");
+            Debug.Log($"Ğ¶ÏÂÎäÆ÷: {unequippedWeapon.ItemName}");
             return unequippedWeapon;
         }
 
         /// <summary>
-        /// è£…å¤‡ç‰©å“
+        /// ×°±¸ÎïÆ·
         /// </summary>
-        /// <param name="equipmentData">è£…å¤‡æ•°æ®</param>
-        /// <returns>æ˜¯å¦è£…å¤‡æˆåŠŸ</returns>
+        /// <param name="equipmentData">×°±¸Êı¾İ</param>
+        /// <returns>ÊÇ·ñ×°±¸³É¹¦</returns>
         public bool EquipItem(EquipmentData equipmentData)
         {
             if (equipmentData == null)
             {
-                Debug.LogWarning("è£…å¤‡æ•°æ®ä¸ºç©º");
+                Debug.LogWarning("×°±¸Êı¾İÎª¿Õ");
                 return false;
             }
 
-            // æ·»åŠ åˆ°è£…å¤‡åˆ—è¡¨
+            // Ìí¼Óµ½×°±¸ÁĞ±í
             equippedItems.Add(equipmentData);
             ApplyEquipmentEffects(equipmentData);
 
-            // è§¦å‘äº‹ä»¶
+            // ´¥·¢ÊÂ¼ş
             OnEquipmentEquipped?.Invoke(equipmentData);
             OnEquipmentChanged?.Invoke();
 
-            Debug.Log($"è£…å¤‡ç‰©å“: {equipmentData.ItemName}");
+            Debug.Log($"×°±¸ÎïÆ·: {equipmentData.ItemName}");
             return true;
         }
 
         /// <summary>
-        /// å¸ä¸‹è£…å¤‡ï¼ˆå·²ç¦ç”¨ï¼‰
+        /// Ğ¶ÏÂ×°±¸£¨ÒÑ½ûÓÃ£©
         /// </summary>
-        /// <param name="equipmentData">è¦å¸ä¸‹çš„è£…å¤‡</param>
-        /// <returns>nullï¼Œå› ä¸ºè£…å¤‡æ— æ³•å¸ä¸‹</returns>
+        /// <param name="equipmentData">ÒªĞ¶ÏÂµÄ×°±¸</param>
+        /// <returns>null£¬ÒòÎª×°±¸ÎŞ·¨Ğ¶ÏÂ</returns>
         public EquipmentData UnequipItem(EquipmentData equipmentData)
         {
-            Debug.LogWarning($"è£…å¤‡ {equipmentData?.ItemName} æ— æ³•å¸ä¸‹ï¼Œè£…å¤‡ç³»ç»Ÿå·²è®¾ç½®ä¸ºè‡ªåŠ¨è£…å¤‡æ¨¡å¼");
+            Debug.LogWarning($"×°±¸ {equipmentData?.ItemName} ÎŞ·¨Ğ¶ÏÂ£¬×°±¸ÏµÍ³ÒÑÉèÖÃÎª×Ô¶¯×°±¸Ä£Ê½");
             return null;
         }
 
         /// <summary>
-        /// è·å–æ‰€æœ‰å·²è£…å¤‡çš„ç‰©å“
+        /// »ñÈ¡ËùÓĞÒÑ×°±¸µÄÎïÆ·
         /// </summary>
-        /// <returns>å·²è£…å¤‡çš„ç‰©å“åˆ—è¡¨</returns>
+        /// <returns>ÒÑ×°±¸µÄÎïÆ·ÁĞ±í</returns>
         public List<EquipmentData> GetAllEquippedItems()
         {
             return new List<EquipmentData>(equippedItems);
         }
 
         /// <summary>
-        /// è·å–æŒ‡å®šå±æ€§çš„æ€»åŠ æˆå€¼
+        /// »ñÈ¡Ö¸¶¨ÊôĞÔµÄ×Ü¼Ó³ÉÖµ
         /// </summary>
-        /// <param name="attributeType">å±æ€§ç±»å‹</param>
-        /// <returns>æ€»åŠ æˆå€¼</returns>
+        /// <param name="attributeType">ÊôĞÔÀàĞÍ</param>
+        /// <returns>×Ü¼Ó³ÉÖµ</returns>
         public float GetTotalAttributeBonus(AttributeType attributeType)
         {
             float totalBonus = 0f;
 
-            // è®¡ç®—è£…å¤‡åŠ æˆ
+            // ¼ÆËã×°±¸¼Ó³É
             foreach (var equipment in equippedItems)
             {
                 if (equipment != null)
@@ -160,29 +160,29 @@ namespace InventorySystem.Managers
         }
 
         /// <summary>
-        /// åº”ç”¨æ­¦å™¨æ•ˆæœ
+        /// Ó¦ÓÃÎäÆ÷Ğ§¹û
         /// </summary>
-        /// <param name="weaponData">æ­¦å™¨æ•°æ®</param>
+        /// <param name="weaponData">ÎäÆ÷Êı¾İ</param>
         private void ApplyWeaponEffects(WeaponData weaponData)
         {
-            // æ­¦å™¨æš‚æ—¶ä¸æä¾›å±æ€§åŠ æˆï¼Œåªè®°å½•è£…å¤‡çŠ¶æ€
-            Debug.Log($"åº”ç”¨æ­¦å™¨æ•ˆæœ: {weaponData.ItemName}");
+            // ÎäÆ÷ÔİÊ±²»Ìá¹©ÊôĞÔ¼Ó³É£¬Ö»¼ÇÂ¼×°±¸×´Ì¬
+            Debug.Log($"Ó¦ÓÃÎäÆ÷Ğ§¹û: {weaponData.ItemName}");
         }
 
         /// <summary>
-        /// ç§»é™¤æ­¦å™¨æ•ˆæœ
+        /// ÒÆ³ıÎäÆ÷Ğ§¹û
         /// </summary>
-        /// <param name="weaponData">æ­¦å™¨æ•°æ®</param>
+        /// <param name="weaponData">ÎäÆ÷Êı¾İ</param>
         private void RemoveWeaponEffects(WeaponData weaponData)
         {
-            // æ­¦å™¨æš‚æ—¶ä¸æä¾›å±æ€§åŠ æˆï¼Œåªè®°å½•è£…å¤‡çŠ¶æ€
-            Debug.Log($"ç§»é™¤æ­¦å™¨æ•ˆæœ: {weaponData.ItemName}");
+            // ÎäÆ÷ÔİÊ±²»Ìá¹©ÊôĞÔ¼Ó³É£¬Ö»¼ÇÂ¼×°±¸×´Ì¬
+            Debug.Log($"ÒÆ³ıÎäÆ÷Ğ§¹û: {weaponData.ItemName}");
         }
 
         /// <summary>
-        /// åº”ç”¨è£…å¤‡æ•ˆæœ
+        /// Ó¦ÓÃ×°±¸Ğ§¹û
         /// </summary>
-        /// <param name="equipmentData">è£…å¤‡æ•°æ®</param>
+        /// <param name="equipmentData">×°±¸Êı¾İ</param>
         private void ApplyEquipmentEffects(EquipmentData equipmentData)
         {
             var characterManager = CharacterManager.Instance;
@@ -194,9 +194,9 @@ namespace InventorySystem.Managers
         }
 
         /// <summary>
-        /// ç§»é™¤è£…å¤‡æ•ˆæœ
+        /// ÒÆ³ı×°±¸Ğ§¹û
         /// </summary>
-        /// <param name="equipmentData">è£…å¤‡æ•°æ®</param>
+        /// <param name="equipmentData">×°±¸Êı¾İ</param>
         private void RemoveEquipmentEffects(EquipmentData equipmentData)
         {
             var characterManager = CharacterManager.Instance;
@@ -208,26 +208,26 @@ namespace InventorySystem.Managers
         }
 
         /// <summary>
-        /// è·å–è£…å¤‡ç»Ÿè®¡ä¿¡æ¯
+        /// »ñÈ¡×°±¸Í³¼ÆĞÅÏ¢
         /// </summary>
-        /// <returns>è£…å¤‡ç»Ÿè®¡ä¿¡æ¯å­—ç¬¦ä¸²</returns>
+        /// <returns>×°±¸Í³¼ÆĞÅÏ¢×Ö·û´®</returns>
         public string GetEquipmentStats()
         {
             var stats = new System.Text.StringBuilder();
-            stats.AppendLine("=== è£…å¤‡çŠ¶æ€ ===");
+            stats.AppendLine("=== ×°±¸×´Ì¬ ===");
             
             if (currentWeapon != null)
             {
-                stats.AppendLine($"æ­¦å™¨: {currentWeapon.ItemName}");
+                stats.AppendLine($"ÎäÆ÷: {currentWeapon.ItemName}");
             }
             else
             {
-                stats.AppendLine("æ­¦å™¨: æ— ");
+                stats.AppendLine("ÎäÆ÷: ÎŞ");
             }
 
             if (equippedItems.Count > 0)
             {
-                stats.AppendLine($"è£…å¤‡æ•°é‡: {equippedItems.Count}");
+                stats.AppendLine($"×°±¸ÊıÁ¿: {equippedItems.Count}");
                 foreach (var equipment in equippedItems)
                 {
                     stats.AppendLine($"  - {equipment.ItemName}");
@@ -235,27 +235,44 @@ namespace InventorySystem.Managers
             }
             else
             {
-                stats.AppendLine("è£…å¤‡: æ— ");
+                stats.AppendLine("×°±¸: ÎŞ");
             }
 
             return stats.ToString();
         }
 
         /// <summary>
-        /// æ¸…ç©ºæ‰€æœ‰è£…å¤‡ï¼ˆå·²ç¦ç”¨ï¼‰
+        /// Çå¿ÕËùÓĞ×°±¸£¨ÒÑ½ûÓÃ£©
         /// </summary>
         public void ClearAllEquipment()
         {
-            Debug.LogWarning("æ— æ³•æ¸…ç©ºè£…å¤‡ï¼Œè£…å¤‡ç³»ç»Ÿå·²è®¾ç½®ä¸ºè‡ªåŠ¨è£…å¤‡æ¨¡å¼");
+            Debug.LogWarning("ÎŞ·¨Çå¿Õ×°±¸£¬×°±¸ÏµÍ³ÒÑÉèÖÃÎª×Ô¶¯×°±¸Ä£Ê½");
         }
 
         /// <summary>
-        /// è°ƒè¯•ç”¨ï¼šæ‰“å°è£…å¤‡çŠ¶æ€
+        /// µ÷ÊÔÓÃ£º´òÓ¡×°±¸×´Ì¬
         /// </summary>
-        [ContextMenu("æ‰“å°è£…å¤‡çŠ¶æ€")]
+        [ContextMenu("´òÓ¡×°±¸×´Ì¬")]
         public void PrintEquipmentStatus()
         {
             Debug.Log(GetEquipmentStats());
+        }
+
+        /// <summary>
+        /// µ÷ÊÔÓÃ£º²âÊÔÎäÆ÷×°±¸
+        /// </summary>
+        [ContextMenu("²âÊÔÎäÆ÷×°±¸")]
+        public void TestWeaponEquipment()
+        {
+            if (currentWeapon != null)
+            {
+                Debug.Log($"µ±Ç°ÎäÆ÷: {currentWeapon.ItemName}");
+                Debug.Log("ÎäÆ÷ÊµÀı¹ÜÀíÓÉWeaponInstanceManager¸ºÔğ");
+            }
+            else
+            {
+                Debug.Log("µ±Ç°Ã»ÓĞ×°±¸ÎäÆ÷");
+            }
         }
     }
 }

@@ -10,20 +10,21 @@ namespace InventorySystem.Data
     public class AttributeModifier
     {
         [Header("属性修改")]
-        [SerializeField] private AttributeType attributeType;
-        [SerializeField] private float value;
-        [SerializeField] private bool isPercentage;
+        [SerializeField] public AttributeType attributeType;
+        [SerializeField] public float value;
+        [SerializeField] public bool isPercentage;
 
         // 属性访问器
         public AttributeType AttributeType => attributeType;
         public float Value => value;
+        public bool IsPercentage => isPercentage;
 
         /// <summary>
         /// 默认构造函数
         /// </summary>
         public AttributeModifier()
         {
-            attributeType = AttributeType.Attack;
+            attributeType = AttributeType.power;
             value = 0f;
             isPercentage = false;
         }
@@ -35,7 +36,7 @@ namespace InventorySystem.Data
         {
             attributeType = type;
             value = val;
-            isPercentage= isPercent;
+            isPercentage = isPercent;
         }
 
         /// <summary>
@@ -44,12 +45,17 @@ namespace InventorySystem.Data
         public string GetDescription()
         {
             string attributeName = GetAttributeDisplayName();
-            string valueStr = value > 0 ? $"+{value:F1}" : value.ToString("F1");
-            
-            // 对于百分比属性，显示百分比
-            if (attributeType == AttributeType.CriticalRate || attributeType == AttributeType.CriticalDamage)
+            string valueStr;
+
+            if (isPercentage || attributeType == AttributeType.critical)
             {
+                // 百分比显示
                 valueStr = value > 0 ? $"+{(value * 100):F1}%" : $"{(value * 100):F1}%";
+            }
+            else
+            {
+                // 普通数值显示
+                valueStr = value > 0 ? $"+{value:F1}" : value.ToString("F1");
             }
 
             return $"{attributeName}: {valueStr}";
@@ -62,13 +68,12 @@ namespace InventorySystem.Data
         {
             return attributeType switch
             {
-                AttributeType.Health => "生命值",
-                AttributeType.San => "San值",
-                AttributeType.Attack => "攻击力",
-                AttributeType.Defense => "防御力",
-                AttributeType.MoveSpeed => "移动速度",
-                AttributeType.CriticalRate => "暴击率",
-                AttributeType.CriticalDamage => "暴击伤害",
+                AttributeType.power => "力量",
+                AttributeType.armor => "护甲",
+                AttributeType.intelligence => "智力",
+                AttributeType.attackSpeed => "攻击速度",
+                AttributeType.moveSpeed => "移动速度",
+                AttributeType.critical => "暴击率",
                 _ => attributeType.ToString()
             };
         }

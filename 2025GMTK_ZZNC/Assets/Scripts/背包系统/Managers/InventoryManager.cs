@@ -174,6 +174,7 @@ namespace InventorySystem.Managers
             if (success)
             {
                 Debug.Log($"装备武器: {weaponData.ItemName}");
+                
             }
             else
             {

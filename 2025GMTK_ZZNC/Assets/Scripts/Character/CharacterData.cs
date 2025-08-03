@@ -3,28 +3,71 @@ using System;
 
 namespace InventorySystem.Character
 {
-    /// <summary>
-    /// 角色属性数据类
-    /// 包含角色的所有基础属性
-    /// </summary>
     [System.Serializable]
     public class CharacterData
     {
+        [Header("特殊属性")]
+        [SerializeField] private float maxHealth = 100f;
+        [SerializeField] private float currentHealth = 100f;
+        [SerializeField] private float maxSan = 100f;
+        [SerializeField] private float currentSan = 100f;
+
         [Header("基础属性")]
-        [SerializeField] private float maxHealth = 100f;           // 最大生命值
-        [SerializeField] private float currentHealth = 100f;      // 当前生命值
-        [SerializeField] private float maxSan = 100f;             // 最大san值
-        [SerializeField] private float currentSan = 100f;         // 当前san值
-        [SerializeField] private float attack = 10f;              // 攻击力
-        [SerializeField] private float defense = 5f;              // 防御力
-        [SerializeField] private float moveSpeed = 5f;            // 移动速度
+        [SerializeField] private float power = 10f;              // 力量
+        [SerializeField] private float armor = 5f;               // 护甲
+        [SerializeField] private float intelligence = 10f;       // 智力
+        [SerializeField] private float attackSpeed = 1f;         // 攻击速度
+        [SerializeField] private float moveSpeed = 1f;           // 移动速度
+        [SerializeField] private float criticalRate = 0.05f;     // 暴击率
+        [SerializeField] private float criticalDamage = 1.5f;    // 暴击伤害
 
         [Header("技能属性")]
-        [SerializeField] private int skillPoints = 0;             // 技能点数
-        [SerializeField] private float criticalRate = 0.05f;      // 暴击率
-        [SerializeField] private float criticalDamage = 1.5f;     // 暴击伤害倍率
+        [SerializeField] private int skillPoints = 0;
 
-        // 属性访问器
+        // 基础属性访问器
+        public float Power
+        {
+            get => power;
+            set => power = Mathf.Max(0, value);
+        }
+
+        public float Armor
+        {
+            get => armor;
+            set => armor = Mathf.Max(0, value);
+        }
+
+        public float Intelligence
+        {
+            get => intelligence;
+            set => intelligence = Mathf.Max(0, value);
+        }
+
+        public float AttackSpeed
+        {
+            get => attackSpeed;
+            set => attackSpeed = Mathf.Max(0.1f, value);
+        }
+
+        public float MoveSpeed
+        {
+            get => moveSpeed;
+            set => moveSpeed = Mathf.Max(0.1f, value);
+        }
+
+        public float CriticalRate
+        {
+            get => criticalRate;
+            set => criticalRate = Mathf.Clamp01(value);
+        }
+
+        public float CriticalDamage
+        {
+            get => criticalDamage;
+            set => criticalDamage = Mathf.Max(1f, value);
+        }
+
+        // 其他属性访问器保持不变
         public float MaxHealth 
         { 
             get => maxHealth; 
@@ -49,67 +92,29 @@ namespace InventorySystem.Character
             set => currentSan = Mathf.Clamp(value, 0, maxSan); 
         }
         
-        public float Attack 
-        { 
-            get => attack; 
-            set => attack = Mathf.Max(0, value); 
-        }
-        
-        public float Defense 
-        { 
-            get => defense; 
-            set => defense = Mathf.Max(0, value); 
-        }
-        
-        public float MoveSpeed 
-        { 
-            get => moveSpeed; 
-            set => moveSpeed = Mathf.Max(0, value); 
-        }
-        
         public int SkillPoints 
         { 
             get => skillPoints; 
             set => skillPoints = Mathf.Max(0, value); 
         }
-        
-        public float CriticalRate 
-        { 
-            get => criticalRate; 
-            set => criticalRate = Mathf.Clamp01(value); 
-        }
-        
-        public float CriticalDamage 
-        { 
-            get => criticalDamage; 
-            set => criticalDamage = Mathf.Max(1f, value); 
-        }
 
-        /// <summary>
-        /// 构造函数
-        /// </summary>
+        // 构造函数更新
         public CharacterData()
         {
             // 使用默认值
         }
 
-        /// <summary>
-        /// 带参数的构造函数
-        /// </summary>
-        public CharacterData(float maxHealth, float maxSan, float attack, float defense, float moveSpeed)
+        public CharacterData(float maxHealth, float maxSan, float power, float armor, float intelligence)
         {
             this.maxHealth = maxHealth;
             this.currentHealth = maxHealth;
             this.maxSan = maxSan;
             this.currentSan = maxSan;
-            this.attack = attack;
-            this.defense = defense;
-            this.moveSpeed = moveSpeed;
+            this.power = power;
+            this.armor = armor;
+            this.intelligence = intelligence;
         }
 
-        /// <summary>
-        /// 复制构造函数
-        /// </summary>
         public CharacterData(CharacterData other)
         {
             if (other != null)
@@ -118,95 +123,65 @@ namespace InventorySystem.Character
                 currentHealth = other.currentHealth;
                 maxSan = other.maxSan;
                 currentSan = other.currentSan;
-                attack = other.attack;
-                defense = other.defense;
+                power = other.power;
+                armor = other.armor;
+                intelligence = other.intelligence;
+                attackSpeed = other.attackSpeed;
                 moveSpeed = other.moveSpeed;
-                skillPoints = other.skillPoints;
                 criticalRate = other.criticalRate;
                 criticalDamage = other.criticalDamage;
+                skillPoints = other.skillPoints;
             }
         }
 
-        /// <summary>
-        /// 获取生命值百分比
-        /// </summary>
-        public float HealthPercentage => maxHealth > 0 ? currentHealth / maxHealth : 0f;
-
-        /// <summary>
-        /// 获取San值百分比
-        /// </summary>
-        public float SanPercentage => maxSan > 0 ? currentSan / maxSan : 0f;
-
-        /// <summary>
-        /// 恢复生命值
-        /// </summary>
-        public void RestoreHealth(float amount)
-        {
-            CurrentHealth += amount;
-        }
-
-        /// <summary>
-        /// 扣除生命值
-        /// </summary>
+        // 计算实际伤害的方法更新
         public void TakeDamage(float damage)
         {
-            float actualDamage = Mathf.Max(0, damage - defense);
+            float actualDamage = Mathf.Max(0, damage - armor);
             CurrentHealth -= actualDamage;
         }
 
-        /// <summary>
-        /// 恢复San值
-        /// </summary>
-        public void RestoreSan(float amount)
-        {
-            CurrentSan += amount;
-        }
-
-        /// <summary>
-        /// 扣除San值
-        /// </summary>
-        public void ConsumeSan(float amount)
-        {
-            CurrentSan -= amount;
-        }
-
-        /// <summary>
-        /// 重置到满血满San状态
-        /// </summary>
+        // 其他方法保持不变
+        public float HealthPercentage => maxHealth > 0 ? currentHealth / maxHealth : 0f;
+        public float SanPercentage => maxSan > 0 ? currentSan / maxSan : 0f;
+        public void RestoreHealth(float amount) => CurrentHealth += amount;
+        public void RestoreSan(float amount) => CurrentSan += amount;
+        public void ConsumeSan(float amount) => CurrentSan -= amount;
         public void FullRestore()
         {
             currentHealth = maxHealth;
             currentSan = maxSan;
         }
 
-        /// <summary>
-        /// 检查角色是否存活
-        /// </summary>
         public bool IsAlive => currentHealth > 0;
-
-        /// <summary>
-        /// 检查San值是否正常
-        /// </summary>
         public bool IsSane => currentSan > 0;
 
-        /// <summary>
-        /// 获取角色状态描述
-        /// </summary>
+        // 状态描述更新
         public string GetStatusDescription()
         {
-            return $"生命值: {currentHealth:F1}/{maxHealth:F1} " +
-                   $"San值: {currentSan:F1}/{maxSan:F1} " +
-                   $"攻击力: {attack:F1} " +
-                   $"防御力: {defense:F1} " +
-                   $"移速: {moveSpeed:F1}";
+            return $"生命值: {currentHealth:F1}/{maxHealth:F1}\n" +
+                   $"San值: {currentSan:F1}/{maxSan:F1}\n" +
+                   $"力量: {power:F1}\n" +
+                   $"护甲: {armor:F1}\n" +
+                   $"智力: {intelligence:F1}\n" +
+                   $"攻击速度: {attackSpeed:P0}\n" +
+                   $"移动速度: {moveSpeed:P0}\n" +
+                   $"暴击率: {criticalRate:P0}\n" +
+                   $"暴击伤害: {criticalDamage:P0}";
         }
 
-        /// <summary>
-        /// 转换为字符串
-        /// </summary>
-        public override string ToString()
+        public override string ToString() => GetStatusDescription();
+
+        // 新增：属性值限制方法
+        public void ClampAttributes()
         {
-            return GetStatusDescription();
+            power = Mathf.Max(0, power);
+            armor = Mathf.Max(0, armor);
+            intelligence = Mathf.Max(0, intelligence);
+            attackSpeed = Mathf.Max(0.1f, attackSpeed);
+            moveSpeed = Mathf.Max(0.1f, moveSpeed);
+            criticalRate = Mathf.Clamp01(criticalRate);
+            criticalDamage = Mathf.Max(1f, criticalDamage);
         }
     }
 }
