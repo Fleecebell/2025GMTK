@@ -7,7 +7,7 @@ namespace InventorySystem.Character
     /// 角色管理器
     /// 管理角色属性和装备效果
     /// </summary>
-    public class CharacterManager : MonoBehaviour
+    public class CharacterManager : MonoBehaviour,IHealth
     {
         [Header("角色基础数据")]
         [SerializeField] private CharacterDataConfig characterDataConfig;
@@ -17,6 +17,10 @@ namespace InventorySystem.Character
         
         // 装备提供的属性加成
         private EquipmentAttributes totalEquipmentBonus;
+
+        // IHealth接口实现
+        public float CurrentHealth => currentCharacterData != null ? currentCharacterData.CurrentHealth : 0f;
+        public float MaxHealth => currentCharacterData != null ? currentCharacterData.MaxHealth : 0f;
 
         // 事件
         public event Action<CharacterData> OnCharacterDataChanged;
@@ -156,6 +160,10 @@ namespace InventorySystem.Character
                 Debug.Log($"恢复生命值 {amount:F1}，当前: {currentCharacterData.CurrentHealth:F1}/{currentCharacterData.MaxHealth:F1}");
             }
         }
+        public void RestoreHealth()
+        {
+            RestoreHealth(currentCharacterData.MaxHealth);
+        }
 
         /// <summary>
         /// 受到伤害
@@ -164,7 +172,7 @@ namespace InventorySystem.Character
         {
             float oldHealth = currentCharacterData.CurrentHealth;
             currentCharacterData.TakeDamage(damage);
-            
+
             if (Mathf.Abs(oldHealth - currentCharacterData.CurrentHealth) > 0.01f)
             {
                 OnHealthChanged?.Invoke(currentCharacterData.CurrentHealth, currentCharacterData.MaxHealth);

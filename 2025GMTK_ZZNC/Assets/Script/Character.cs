@@ -1,23 +1,23 @@
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
 public class Character : MonoBehaviour,IHealth
 {
-    [SerializeField] private float maxHealth = 100;
-    [SerializeField] private float currentHealth;
+    [Header("属性")]
+    [SerializeField] protected float maxHealth;
+    [SerializeField] protected float currentHealth;
 
     public float MaxHealth
     {
         get => maxHealth;
         set => maxHealth = value;
     }
+
     public float CurrentHealth
     {
         get => currentHealth;
         set => currentHealth = value;
     }
-
 
     [Header("无敌")]
     public bool invulnerable;
@@ -28,7 +28,7 @@ public class Character : MonoBehaviour,IHealth
 
     protected virtual void OnEnable()
     {
-        CurrentHealth = MaxHealth;
+        currentHealth = maxHealth;
     }
 
     public virtual void TakeDamage(float damage)
@@ -38,13 +38,13 @@ public class Character : MonoBehaviour,IHealth
             return;
         }
         
-        CurrentHealth -= damage;
+        currentHealth -= damage;
 
         StartCoroutine(InvulnerableCoroutine());//启动无敌时间协程
         //执行角色受伤动画
         OnHurt?.Invoke();
         
-        if (CurrentHealth <= 0f)
+        if (currentHealth <= 0f)
         {
             //死亡
             Die();
@@ -52,7 +52,7 @@ public class Character : MonoBehaviour,IHealth
     }
 public virtual void Die()
     {
-        CurrentHealth = 0f;
+        currentHealth = 0f;
         
         //执行角色死亡动画
         OnDie?.Invoke();

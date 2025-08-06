@@ -1,34 +1,36 @@
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class ZZNC_Player : MonoBehaviour
 {
-    // 当前持有的武器实例
+    // 褰撳墠鎸佹湁鐨勬鍣ㄥ疄渚?
     public GameObject currentWeaponInstance { get; private set; }
-    // 当前持有武器的Weapon组件
+    // 褰撳墠鎸佹湁姝﹀櫒鐨刉eapon缁勪欢
     public Weapon currentWeaponComponent { get; private set; }
 
     public float speed = 5.0f;
+    public float thrustPower = 10.0f; // 绐佸埡鐨勫姏閲?
+    public float thrustTime = 1.0f; // 绐佸埡鐨勬椂闂?
 
-    private Rigidbody2D rb; // 2D刚体
-    private CapsuleCollider2D capsuleCollider; // 2D碰撞器
-    private SpriteRenderer spriteRenderer; // 添加SpriteRenderer组件
-    private SpriteRenderer weaponSpriteRenderer; // 武器的SpriteRenderer组件
-    [Header("世界边界")]
-[SerializeField] private float minX ;
-[SerializeField] private float maxX;
-[SerializeField] private float minY;
+    private Rigidbody2D rb; // 2D鍒氫綋
+    private CapsuleCollider2D capsuleCollider; // 2D纰版挒鍣?
+    private SpriteRenderer spriteRenderer; // 娣诲姞SpriteRenderer缁勪欢
+    private SpriteRenderer weaponSpriteRenderer; // 姝﹀櫒鐨凷priteRenderer缁勪欢
+    [Header("涓栫晫杈圭晫")]
+    [SerializeField] private float minX;
+    [SerializeField] private float maxX;
+    [SerializeField] private float minY;
     [SerializeField] private float maxY;
 
+    public Animator animator;
 
     void Start()
     {
-        rb = GetComponent<Rigidbody2D>(); // 获取2D刚体组件
-        capsuleCollider = GetComponent<CapsuleCollider2D>(); // 获取2D碰撞器组件
-        spriteRenderer = GetComponent<SpriteRenderer>(); // 获取SpriteRenderer组件
+        rb = GetComponent<Rigidbody2D>(); // 鑾峰彇2D鍒氫綋缁勪欢
+        capsuleCollider = GetComponent<CapsuleCollider2D>(); // 鑾峰彇2D纰版挒鍣ㄧ粍浠?
+        spriteRenderer = GetComponent<SpriteRenderer>(); // 鑾峰彇SpriteRenderer缁勪欢
 
-        // 初始化时没有武器
+        // 鍒濆鍖栨椂娌℃湁姝﹀櫒
         currentWeaponInstance = null;
         currentWeaponComponent = null;
         weaponSpriteRenderer = null;
@@ -37,35 +39,59 @@ public class ZZNC_Player : MonoBehaviour
     void Update()
     {
         PlayerMove();
+
+        if (Input.GetKey(KeyCode.A) || Input.GetKey(KeyCode.S) || Input.GetKey(KeyCode.W) || Input.GetKey(KeyCode.D))
+        {
+            animator.SetBool("isMoving", true);
+        }
+        else
+        {
+            animator.SetBool("isMoving", false);
+        }
+
+        if (Input.GetMouseButtonDown(1))
+        {
+            animator.SetTrigger("isAttack");
+            // 鍚姩鍗忕▼锛屾敼鍙橀�熷害
+            StartCoroutine(ThrustSpeed());
+        }
+
+        if (Input.GetKeyDown(KeyCode.E))
+        {
+            animator.SetTrigger("isHurt");
+            // 鎵ｈ
+            Debug.Log("鎵ｈ");
+            blood.HP -= 10;
+        }
+
+        if (blood.HP <= 0)
+        {
+            animator.SetTrigger("isDie");
+        }
     }
+
     private void LateUpdate()
     {
         Vector3 pos = transform.localPosition;
 
-        // X 轴环绕
+        // X 杞寸幆缁?
         if (pos.x > maxX) pos.x = minX + 0.5f;
-        Debug.Log(pos.x);
         if (pos.x < minX) pos.x = maxX - 0.5f;
-        Debug.Log(pos.x);
 
-        // Y 轴环绕
+        // Y 杞寸幆缁?
         if (pos.y > maxY) pos.y = minY + 0.5f;
-        Debug.Log(pos.y);
         if (pos.y < minY) pos.y = maxY - 0.5f;
-        Debug.Log(pos.y);
-
         transform.localPosition = pos;
     }
-
 
     private void PlayerMove()
     {
         float horizontal = Input.GetAxis("Horizontal");
         float vertical = Input.GetAxis("Vertical");
         Vector2 move = new Vector2(horizontal, vertical);
-        rb.velocity = move * speed; // 设置速度
+        rb.velocity = move * speed; // 璁剧疆閫熷害
 
-        // 翻转SpriteRenderer的x轴
+        // 缈昏浆SpriteRenderer鐨剎杞?
         if (horizontal < 0)
         {
             spriteRenderer.flipX = true;
@@ -80,8 +106,8 @@ public class ZZNC_Player : MonoBehaviour
     {
         currentWeaponInstance = obj;
         currentWeaponComponent = weapon;
-        
-        // 获取武器的SpriteRenderer组件
+
+        // 鑾峰彇姝﹀櫒鐨凷priteRenderer缁勪欢
         if (currentWeaponInstance != null)
         {
             weaponSpriteRenderer = currentWeaponInstance.GetComponent<SpriteRenderer>();
@@ -90,5 +116,16 @@ public class ZZNC_Player : MonoBehaviour
         {
             weaponSpriteRenderer = null;
         }
+    }
+
+    // 鍗忕▼锛氭敼鍙橀�熷害
+    private IEnumerator ThrustSpeed()
+    {
+        float originalSpeed = speed; // 淇濆瓨鍘熷閫熷害
+        speed = thrustPower; // 璁剧疆绐佸埡閫熷害
+
+        yield return new WaitForSeconds(thrustTime); // 绛夊緟1绉?
+
+        speed = originalSpeed; // 鎭㈠鍘熷閫熷害
     }
 }

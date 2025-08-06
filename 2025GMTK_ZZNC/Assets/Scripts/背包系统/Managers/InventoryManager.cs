@@ -1,13 +1,12 @@
 using UnityEngine;
 using InventorySystem.Core;
-using InventorySystem.Managers;
 using InventorySystem.Items;
 using InventorySystem.Data;
 
 namespace InventorySystem.Managers
 {
     /// <summary>
-    /// 背包管理器 - 背包系统的核心管理器
+    /// 背包管理�? - 背包系统的核心管理器
     /// 遵循单一职责原则，协调背包系统的管理
     /// </summary>
     public class InventoryManager : MonoBehaviour
@@ -15,7 +14,7 @@ namespace InventorySystem.Managers
         [Header("背包设置")]
         [SerializeField] private int maxInventorySlots = 30;
         
-        [Header("管理器")]
+        [Header("管理�?")]
         [SerializeField] private EquipmentManager equipmentManager;
         [SerializeField] private ConsumableManager consumableManager;
 
@@ -25,7 +24,7 @@ namespace InventorySystem.Managers
         // 单例模式
         public static InventoryManager Instance { get; private set; }
 
-        // 只读属性
+        // 只读属�?
         public Inventory Inventory => inventory;
         public EquipmentManager EquipmentManager => equipmentManager;
         public ConsumableManager ConsumableManager => consumableManager;
@@ -40,7 +39,7 @@ namespace InventorySystem.Managers
         /// </summary>
         private void Awake()
         {
-            // 单例模式检查
+            // 单例模式检�?
             if (Instance == null)
             {
                 Instance = this;
@@ -54,7 +53,7 @@ namespace InventorySystem.Managers
         }
 
         /// <summary>
-        /// 初始化背包系统
+        /// 初始化背包系�?
         /// </summary>
         private void InitializeInventorySystem()
         {
@@ -71,7 +70,7 @@ namespace InventorySystem.Managers
             // 绑定事件
             BindInventoryEvents();
 
-            Debug.Log("背包系统初始化完成");
+            Debug.Log("背包系统初始化完�?");
         }
 
         /// <summary>
@@ -85,20 +84,20 @@ namespace InventorySystem.Managers
         }
 
         /// <summary>
-        /// 向背包添加物品
+        /// 向背包添加物�?
         /// </summary>
         /// <param name="item">物品数据</param>
         /// <param name="quantity">数量</param>
-        /// <returns>实际添加的数量</returns>
+        /// <returns>实际添加的数�?</returns>
         public int AddItem(BaseItemData item, int quantity = 1)
         {
             if (item == null)
             {
-                Debug.LogWarning("无法添加空物品数据");
+                Debug.LogWarning("无法添加空物品数�?");
                 return 0;
             }
 
-            // 如果是装备类型，直接装备而不添加到背包
+            // 如果是装备类型，直接装备而不添加到背�?
             if (item.ItemType == ItemType.Equipment)
             {
                 var equipmentData = item as EquipmentData;
@@ -109,7 +108,7 @@ namespace InventorySystem.Managers
                     if (equipped)
                     {
                         Debug.Log($"自动装备: {item.ItemName}");
-                        return quantity; // 返回添加的数量
+                        return quantity; // 返回添加的数�?
                     }
                 }
             }
@@ -125,16 +124,16 @@ namespace InventorySystem.Managers
         }
 
         /// <summary>
-        /// 从背包移除物品
+        /// 从背包移除物�?
         /// </summary>
         /// <param name="item">物品数据</param>
         /// <param name="quantity">数量</param>
-        /// <returns>实际移除的数量</returns>
+        /// <returns>实际移除的数�?</returns>
         public int RemoveItem(BaseItemData item, int quantity = 1)
         {
             if (item == null)
             {
-                Debug.LogWarning("无法移除空物品数据");
+                Debug.LogWarning("无法移除空物品数�?");
                 return 0;
             }
 
@@ -168,7 +167,7 @@ namespace InventorySystem.Managers
                 equipmentManager.UnequipWeapon();
             }
 
-            // 装备新武器
+            // 装备新武�?
             bool success = equipmentManager.EquipWeapon(weaponData);
 
             if (success)
@@ -198,16 +197,16 @@ namespace InventorySystem.Managers
             }
 
             // 装备系统：装备在获取时自动装备，无法卸下
-            // 检查是否已装备该装备
+            // 检查是否已装备该装�?
             var equippedItems = equipmentManager.GetAllEquippedItems();
             if (equippedItems.Contains(equipmentData))
             {
                 // 装备已装备，无法卸下
-                Debug.Log($"装备 {equipmentData.ItemName} 已经装备，无法卸下");
+                Debug.Log($"装备 {equipmentData.ItemName} 已经装备，无法卸�?");
                 return true;
             }
 
-            // 装备新装备
+            // 装备新装�?
             bool success = equipmentManager.EquipItem(equipmentData);
             
             if (success)
@@ -272,11 +271,11 @@ namespace InventorySystem.Managers
         }
 
         /// <summary>
-        /// 检查是否有指定数量的物品
+        /// 检查是否有指定数量的物�?
         /// </summary>
         /// <param name="item">物品数据</param>
         /// <param name="quantity">数量</param>
-        /// <returns>是否有足够数量</returns>
+        /// <returns>是否有足够数�?</returns>
         public bool HasItem(BaseItemData item, int quantity = 1)
         {
             return inventory?.HasItem(item, quantity) ?? false;
@@ -306,17 +305,17 @@ namespace InventorySystem.Managers
         /// 获取指定类型的所有格子（包括空格子）
         /// </summary>
         /// <param name="itemType">物品类型</param>
-        /// <returns>所有格子列表</returns>
+        /// <returns>所有格子列�?</returns>
         public System.Collections.Generic.List<InventorySlot> GetAllSlotsByType(ItemType itemType)
         {
             return inventory?.GetAllSlotsByType(itemType) ?? new System.Collections.Generic.List<InventorySlot>();
         }
 
         /// <summary>
-        /// 获取指定类型的背包统计信息
+        /// 获取指定类型的背包统计信�?
         /// </summary>
         /// <param name="itemType">物品类型</param>
-        /// <returns>统计信息字符串</returns>
+        /// <returns>统计信息字符�?</returns>
         public string GetSubInventoryStats(ItemType itemType)
         {
             return inventory?.GetSubInventoryStats(itemType) ?? "背包未初始化";
@@ -356,7 +355,7 @@ namespace InventorySystem.Managers
         /// <summary>
         /// 获取背包统计信息
         /// </summary>
-        /// <returns>统计信息字符串</returns>
+        /// <returns>统计信息字符�?</returns>
         public string GetInventoryStats()
         {
             return inventory?.GetInventoryStats() ?? "背包未初始化";
@@ -365,10 +364,10 @@ namespace InventorySystem.Managers
         /// <summary>
         /// 获取装备统计信息
         /// </summary>
-        /// <returns>统计信息字符串</returns>
+        /// <returns>统计信息字符�?</returns>
         public string GetEquipmentStats()
         {
-            return equipmentManager?.GetEquipmentStats() ?? "装备管理器未初始化";
+            return equipmentManager?.GetEquipmentStats() ?? "装备管理器未初始�?";
         }
 
         /// <summary>
@@ -380,7 +379,7 @@ namespace InventorySystem.Managers
             if (inventory != null)
             {
                 inventory.ClearInventory();
-                Debug.Log("背包已清空");
+                Debug.Log("背包已清�?");
             }
         }
 

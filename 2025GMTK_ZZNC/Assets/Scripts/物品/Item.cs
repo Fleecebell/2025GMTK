@@ -8,6 +8,7 @@ public class Item : MonoBehaviour
 {
     [Header("物品数据")]
     [SerializeField] private BaseItemData itemData;
+    [SerializeField] private bool isGoods;
 
     [Header("UI")]
     [SerializeField] private Transform pickupUIParent;
@@ -55,10 +56,11 @@ public class Item : MonoBehaviour
             if (curDetail == null)
             {
                 ShowDetail();
-            }else if(curDetail != null)
+            }
+            else if (curDetail != null)
             {
                 HideDetail();
-            }   
+            }
         }
     }
 
@@ -68,6 +70,11 @@ public class Item : MonoBehaviour
         curPrompt = GetOrCreateUI("提示框", pickupPromptPrefab);
         curPrompt.transform.position = transform.position;
         curPrompt.GetComponent<PickupPrompt>()?.SetPickupPrompt(itemData);
+
+        if (isGoods)
+        {
+            curPrompt.transform.Find("价格").GetComponent<TextMeshProUGUI>().text = $"价格: {itemData.price}";
+        }
     }
 
     private void HidePrompt()
@@ -82,6 +89,14 @@ public class Item : MonoBehaviour
             curDetail.GetComponent<ItemDetailUI>()?.ClearPickupPrompt();
             curDetail = null;
         }
+        if (curPrompt != null)
+        {
+            TextMeshProUGUI priceText = curPrompt.transform.Find("价格").GetComponent<TextMeshProUGUI>();
+            if (priceText != null)
+            {
+                priceText.text = null;
+            }
+        }
     }
 
     private void ShowDetail()
@@ -90,6 +105,7 @@ public class Item : MonoBehaviour
         curDetail.transform.position = transform.position;
         curDetail.GetComponent<ItemDetailUI>()?.SetPickupPrompt(itemData);
     }
+
     private void HideDetail()
     {
         if (curDetail)
@@ -105,7 +121,7 @@ public class Item : MonoBehaviour
         {
             if (t.name == name)
             {
-                var script = t.GetComponent<PickupPrompt>() ?? (object)t.GetComponent<ItemDetailUI>();
+                var script = t.GetComponent<PickupPrompt>() ?? (object)t.GetComponent<ItemDetailUI>() ?? (object)t.GetComponent<TextMeshProUGUI>();
                 if (script != null && !(bool)script.GetType().GetProperty("isUsed")?.GetValue(script))
                     return t.gameObject;
             }
@@ -120,13 +136,35 @@ public class Item : MonoBehaviour
     private void PickupItem()
     {
         if (itemData == null) return;
-        InventoryManager.Instance?.AddItem(itemData, 1);
-        Destroy(gameObject);
+
+        if (isGoods)
+        {
+            int price = int.Parse(itemData.price);
+            if (CurrencyManager.Instance != null)
+            {
+                if (CurrencyManager.Instance.HasEnoughCurrency(price))
+                {
+                    CurrencyManager.Instance.Purchase(price);
+                    InventoryManager.Instance?.AddItem(itemData, 1);
+                    Destroy(gameObject);
+                }
+                else
+                {
+                    Debug.Log("货币不足，无法购买！");
+                }
+            }
+        }
+        else
+        {
+            InventoryManager.Instance?.AddItem(itemData, 1);
+            Destroy(gameObject);
+        }
     }
 
-    public void SetItemData(BaseItemData data)
+    public void SetItemData(BaseItemData data, bool isGoods = false)
     {
         itemData = data;
+        this.isGoods = isGoods;
         UpdateItemDisplay();
     }
 

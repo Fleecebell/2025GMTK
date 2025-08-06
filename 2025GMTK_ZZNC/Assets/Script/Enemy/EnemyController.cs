@@ -1,5 +1,4 @@
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
 
@@ -13,10 +12,20 @@ public class EnemyController : MonoBehaviour
     [SerializeField] private float remoteAttackCoolDuration = 2f; // 远程冷却
     private bool canAttack = true;
     private bool canRemoteAttack = true;
+    public float attackPower;
 
     [Header("击退设置")]
     [SerializeField] private float knockbackForce = 10f;
     [SerializeField] private float knockbackDuration = 0.1f;
+
+    [Header("攻击范围")]
+    [SerializeField] private Collider2D attackRangeCollider; // 攻击范围触发器
+    [Header("货币奖励")]
+    [SerializeField]private int minCurrency = 1;
+    [SerializeField]private int maxCurrency = 3;
+    //召唤蓝魂
+    [Tooltip("敌人死亡时生成的特殊预制体")]
+    public GameObject specialEnemyPrefab;
 
     // 状态变量
     public bool IsHurt { get; private set; }
@@ -114,9 +123,40 @@ public class EnemyController : MonoBehaviour
     {
         anim.SetTrigger("Attack");
         agent?.ResetPath();
+
+        // 检测攻击范围内的玩家
+        Collider2D[] hitColliders = new Collider2D[10];
+        int hitCount = Physics2D.OverlapCollider(attackRangeCollider, new ContactFilter2D(), hitColliders);
+
+        Debug.Log($"攻击范围内检测到的碰撞体数量: {hitCount}");
+
+        for (int i = 0; i < hitCount; i++)
+        {
+            var hitCollider = hitColliders[i];
+            if (hitCollider != null)
+            {
+                Debug.Log($"检测到的碰撞体: {hitCollider.name}, Tag: {hitCollider.tag}");
+
+                if (hitCollider.CompareTag("Player"))
+                {
+                    var playerHealth = hitCollider.GetComponent<IHealth>();
+                    if (playerHealth != null)
+                    {
+                        Debug.Log($"对玩家造成伤害: {attackPower}");
+                        playerHealth.TakeDamage(attackPower); // 假设每次攻击造成 attackPower 点伤害
+                    }
+                    else
+                    {
+                        Debug.LogError("玩家对象上没有找到 IHealth 组件！");
+                    }
+                }
+            }
+        }
+
         yield return new WaitForSeconds(attackCoolDuration);
         canAttack = true;
     }
+
 
     // 远程攻击处理
     public void RemoteAttack()
@@ -130,7 +170,6 @@ public class EnemyController : MonoBehaviour
 
     private IEnumerator RemoteAttackCoroutine()
     {
-        anim.SetTrigger("RemoteAttack");
         agent?.ResetPath();
         yield return new WaitForSeconds(remoteAttackCoolDuration);
         canRemoteAttack = true;
@@ -185,6 +224,11 @@ public class EnemyController : MonoBehaviour
         agent.enabled = false;
         rb.velocity = Vector2.zero;
         enemyCollider.enabled = false;
+        ItemManager.Instance.DropItemByRule(this.transform.position);
+        int randomCurrency = Random.Range(minCurrency, maxCurrency + 1);
+        Debug.Log($"随机生成的货币数: {randomCurrency}");
+        CurrencyManager.Instance.GainCurrency(randomCurrency);
+        Debug.Log("敌人死亡");
     }
 
     // 更新动画状态
@@ -195,9 +239,21 @@ public class EnemyController : MonoBehaviour
         anim.SetBool("isDie", IsDead);
     }
 
-    // 销毁敌人
+    // 销毁敌人,并且召唤蓝魂
     public void DestroyEnemy()
     {
+        // 检查是否已分配特殊预制体
+        if (specialEnemyPrefab != null)
+        {
+            // 在当前敌人位置创建特殊预制体
+            // 使用当前对象的位置和旋转
+            Instantiate(specialEnemyPrefab, transform.position, transform.rotation);
+        }
+        else
+        {
+            Debug.LogWarning("未分配特殊敌人预制体，请在Inspector中设置");
+        }
         Destroy(gameObject);
     }
+
 }

@@ -1,5 +1,4 @@
 using UnityEngine;
-
 using InventorySystem.Data;
 using InventorySystem.Managers;
 

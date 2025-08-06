@@ -651,7 +651,7 @@ GameObject:
   - component: {fileID: 732428620515404357}
   - component: {fileID: 8345551899426712917}
   - component: {fileID: 4162759100245423719}
-  - component: {fileID: 1500446525814652888}
+  - component: {fileID: 4511701637096253237}
   m_Layer: 0
   m_Name: trigger
   m_TagString: Untagged
@@ -1034,7 +1034,20 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   roomCamera: {fileID: 6221318352559071054}
   unexploredBlack: {fileID: 5498476869500882360}
---- !u!114 &1500446525814652888
+  enemys:
+  - {fileID: 4291463469161489574, guid: b673a3f0ccce4c64f9b03a2b9de12916, type: 3}
+  - {fileID: 4291463469161489574, guid: b673a3f0ccce4c64f9b03a2b9de12916, type: 3}
+  - {fileID: 4291463469161489574, guid: b673a3f0ccce4c64f9b03a2b9de12916, type: 3}
+  - {fileID: 4291463469161489574, guid: b673a3f0ccce4c64f9b03a2b9de12916, type: 3}
+  - {fileID: 4291463469161489574, guid: b673a3f0ccce4c64f9b03a2b9de12916, type: 3}
+  - {fileID: 613809633161414934, guid: e1718bea94d43f54f8992c4ad9f80110, type: 3}
+  - {fileID: 613809633161414934, guid: e1718bea94d43f54f8992c4ad9f80110, type: 3}
+  - {fileID: 613809633161414934, guid: e1718bea94d43f54f8992c4ad9f80110, type: 3}
+  - {fileID: 613809633161414934, guid: e1718bea94d43f54f8992c4ad9f80110, type: 3}
+  - {fileID: 613809633161414934, guid: e1718bea94d43f54f8992c4ad9f80110, type: 3}
+  - {fileID: 4553525409948284721, guid: f9e99724cf06d704a82f7699fff971ce, type: 3}
+  createPoint: {fileID: 1949857427240036815}
+--- !u!114 &4511701637096253237
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -1061,7 +1074,7 @@ GameObject:
   - component: {fileID: 754681212074224495}
   - component: {fileID: 4490895927020679434}
   - component: {fileID: 485965010114346545}
-  - component: {fileID: -106541366584694973}
+  - component: {fileID: -2789814712448664933}
   m_Layer: 0
   m_Name: map1-G
   m_TagString: Untagged
@@ -1077,11 +1090,12 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3105564269772911004}
   serializedVersion: 2
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 19.32, y: 0, z: 0}
   m_LocalScale: {x: 0.86393, y: 0.86393, z: 0.86393}
   m_ConstrainProportionsScale: 0
   m_Children:
+  - {fileID: 1949857427240036815}
   - {fileID: 436264713510504820}
   - {fileID: 6606430807240475015}
   - {fileID: 8577240856447844245}
@@ -3876,7 +3890,7 @@ TilemapRenderer:
   m_Mode: 0
   m_DetectChunkCullingBounds: 0
   m_MaskInteraction: 0
---- !u!114 &-106541366584694973
+--- !u!114 &-2789814712448664933
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -3906,7 +3920,7 @@ GameObject:
   - component: {fileID: 4437102758583404128}
   - component: {fileID: 7802638165284572536}
   - component: {fileID: 1984551712381855827}
-  - component: {fileID: 997975442209725290}
+  - component: {fileID: 3261820004009808196}
   m_Layer: 0
   m_Name: Grid
   m_TagString: Untagged
@@ -5431,7 +5445,7 @@ CompositeCollider2D:
   m_OffsetDistance: 0.00005
   m_UseDelaunayMesh: 0
   m_CompositeGameObject: {fileID: 3542197304904779296}
---- !u!114 &997975442209725290
+--- !u!114 &3261820004009808196
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -8275,3 +8289,34 @@ AudioListener:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6221318352559071054}
   m_Enabled: 1
+--- !u!1 &6865578742951805254
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1949857427240036815}
+  m_Layer: 0
+  m_Name: CreatePoint
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1949857427240036815
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6865578742951805254}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 2.479999, y: -4.0999994, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 754681212074224495}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}

@@ -1,5 +1,4 @@
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using NavMeshPlus.Components;
 
@@ -10,15 +9,8 @@ public class createmap : MonoBehaviour
     // 地图大小
     public int mapWidth = 20;
     public int mapHeight = 20;
-     public NavMeshSurface navMeshSurface;
-    
-    void Update()
-    {
-        if (Input.GetKeyDown(KeyCode.B))
-        {
-            navMeshSurface.BuildNavMesh();
-        }
-    }
+
+    public NavMeshSurface navMeshSurface;
 
     void Start()
     {
@@ -32,33 +24,27 @@ public class createmap : MonoBehaviour
             for (int y = 0; y < mapHeight; y++)
             {
                 // 随机选择一个房间预制体
-                GameObject selectedRoomPrefab = SelectRoomPrefab();
+                int randomIndex = Random.Range(0, roomPrefabs.Length);
+                GameObject selectedRoomPrefab = roomPrefabs[randomIndex];
 
                 // 实例化房间预制体
                 GameObject roomInstance = Instantiate(selectedRoomPrefab, new Vector3(x * 18.135f, y * 10.355f, 0), Quaternion.identity);
 
-                // 如果需要，可以添加到某个父对象�?
+                // 如果需要，可以添加到某个父对象�?
                 roomInstance.transform.parent = transform;
             }
         }
+        // 生成导航网格
+        StartCoroutine(BuildNavMeshAfterDelay());
     }
 
-    GameObject SelectRoomPrefab()
+    IEnumerator BuildNavMeshAfterDelay()
     {
-        int randomIndex = Random.Range(0, 100); // 生成0�?99的随机数
+        // 等待一段时间以确保所有房间都已实例化并渲�?
+        yield return new WaitForSeconds(1f);
 
-        if (randomIndex < 55) // 45%的概率选择普通房�?
-        {
-            int roomIndex = Random.Range(0, 6); // 选择索引0�?5的普通房�?
-            return roomPrefabs[roomIndex];
-        }
-        else if (randomIndex < 80) // 25%的概率选择商店（索�?6�?
-        {
-            return roomPrefabs[6];
-        }
-        else // 20%的概率选择宝箱房（索引7�?
-        {
-            return roomPrefabs[7];
-        }
+        // 生成导航网格
+        navMeshSurface.BuildNavMesh();
+        Debug.Log("导航网格已烘�?");
     }
 }

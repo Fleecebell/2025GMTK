@@ -1,5 +1,36 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
+--- !u!1 &293310576458118794
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 6028054296958392026}
+  m_Layer: 0
+  m_Name: CreatePoint
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &6028054296958392026
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 293310576458118794}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 2.48, y: -4.1, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 3074960628337233839}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &420708158125543655
 GameObject:
   m_ObjectHideFlags: 0
@@ -103,7 +134,7 @@ GameObject:
   - component: {fileID: 3074960628337233839}
   - component: {fileID: 1166332277989133245}
   - component: {fileID: 3916758852512516415}
-  - component: {fileID: 4034083834757844574}
+  - component: {fileID: -3929788901763211311}
   m_Layer: 0
   m_Name: map1-H
   m_TagString: Untagged
@@ -119,7 +150,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1038669236506057119}
   serializedVersion: 2
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 19.32, y: 0, z: 0}
   m_LocalScale: {x: 0.86393, y: 0.86393, z: 0.86393}
   m_ConstrainProportionsScale: 0
@@ -129,6 +160,7 @@ Transform:
   - {fileID: 1387280848446002584}
   - {fileID: 5714451565189132799}
   - {fileID: 7017589029376657120}
+  - {fileID: 6028054296958392026}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1839735485 &1166332277989133245
@@ -2914,7 +2946,7 @@ TilemapRenderer:
   m_Mode: 0
   m_DetectChunkCullingBounds: 0
   m_MaskInteraction: 0
---- !u!114 &4034083834757844574
+--- !u!114 &-3929788901763211311
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -2945,7 +2977,7 @@ GameObject:
   - component: {fileID: 7160587313121842651}
   - component: {fileID: 6047524919190293887}
   - component: {fileID: 7874598235744912416}
-  - component: {fileID: 4160268755517391822}
+  - component: {fileID: 1400601593107219875}
   m_Layer: 0
   m_Name: trigger
   m_TagString: Untagged
@@ -3328,7 +3360,17 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   roomCamera: {fileID: 420708158125543655}
   unexploredBlack: {fileID: 8949128479392674014}
---- !u!114 &4160268755517391822
+  enemys:
+  - {fileID: 4291463469161489574, guid: b673a3f0ccce4c64f9b03a2b9de12916, type: 3}
+  - {fileID: 4291463469161489574, guid: b673a3f0ccce4c64f9b03a2b9de12916, type: 3}
+  - {fileID: 4291463469161489574, guid: b673a3f0ccce4c64f9b03a2b9de12916, type: 3}
+  - {fileID: 4291463469161489574, guid: b673a3f0ccce4c64f9b03a2b9de12916, type: 3}
+  - {fileID: 613809633161414934, guid: e1718bea94d43f54f8992c4ad9f80110, type: 3}
+  - {fileID: 613809633161414934, guid: e1718bea94d43f54f8992c4ad9f80110, type: 3}
+  - {fileID: 613809633161414934, guid: e1718bea94d43f54f8992c4ad9f80110, type: 3}
+  - {fileID: 4553525409948284721, guid: f9e99724cf06d704a82f7699fff971ce, type: 3}
+  createPoint: {fileID: 6028054296958392026}
+--- !u!114 &1400601593107219875
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -3724,7 +3766,7 @@ GameObject:
   - component: {fileID: 9009324341847564751}
   - component: {fileID: 8671150222899811252}
   - component: {fileID: 6656009426496463827}
-  - component: {fileID: 7106420886193756494}
+  - component: {fileID: 1978628617419431538}
   m_Layer: 0
   m_Name: Grid
   m_TagString: Untagged
@@ -5537,7 +5579,7 @@ CompositeCollider2D:
   m_OffsetDistance: 0.00005
   m_UseDelaunayMesh: 0
   m_CompositeGameObject: {fileID: 5119061089293690127}
---- !u!114 &7106420886193756494
+--- !u!114 &1978628617419431538
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -5570,7 +5612,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &7017589029376657120
 Transform:
   m_ObjectHideFlags: 0

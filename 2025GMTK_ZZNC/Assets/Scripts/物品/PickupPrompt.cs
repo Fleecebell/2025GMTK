@@ -1,10 +1,6 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using InventorySystem.Items;
 using TMPro;
-using UnityEngine.UI;
-using System.Text;
 
 
 public class PickupPrompt : MonoBehaviour

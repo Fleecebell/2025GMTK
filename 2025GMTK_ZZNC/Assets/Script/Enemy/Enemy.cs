@@ -1,48 +1,48 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.AI;
 
 public class Enemy : Character
 {
-    [Header("导航设置")]
+    [Header("瀵艰埅璁剧疆")]
     [SerializeField] private NavMeshAgent agent;
-    [SerializeField] private float rotationSpeed = 5f; // 转向速度
+    [SerializeField] private float rotationSpeed = 2f; // 杞悜閫熷害
+    public static float speed = 2f; // 绉诲姩閫熷害
 
-    [Header("目标与范围")]
-    [SerializeField] private Transform player;
+    [Header("鐩爣涓庤寖鍥?")]
+    [SerializeField] public Transform player;
     [SerializeField] private float chaseDistance = 3f;
-    [SerializeField] private float attackDistance = 0.8f;
+    [SerializeField] public float attackDistance = 0.8f;
 
-    [Header("攻击设置")]
+    [Header("鏀诲嚮璁剧疆")]
     public float meleeAttackDamage;
     public UnityEvent OnAttack;
 
-    [Header("行为参数")]
+    [Header("琛屼负鍙傛暟")]
     [SerializeField] private float attackCooldown = 1f;
     private float lastAttackTime;
     private EnemyController controller;
 
     private void Awake()
     {
-        // 获取组件引用
+        // 鑾峰彇缁勪欢寮曠敤
         if (agent == null)
             agent = GetComponent<NavMeshAgent>();
-
+            
         controller = GetComponent<EnemyController>();
 
-        // 2D导航设置
+        // 2D瀵艰埅璁剧疆
         if (agent != null)
         {
             agent.updateRotation = false;
             agent.updateUpAxis = false;
         }
-        player=GameObject.Find("player").transform;
+        player = GameObject.FindGameObjectWithTag("Player").transform;
     }
 
     private void Update()
     {
+        agent.speed = speed; 
         if (player == null || agent == null || controller == null || controller.IsDead)
             return;
 
@@ -52,24 +52,24 @@ public class Enemy : Character
         {
             if (distanceToPlayer <= attackDistance)
             {
-                // 攻击范围内
+                // 鏀诲嚮鑼冨洿鍐?
                 agent.ResetPath();
                 //FaceTarget(player.position);
                 TryAttack();
             }
             else
             {
-                // 追击玩家
+                // 杩藉嚮鐜╁
                 agent.SetDestination(player.position);
             }
         }
         else
         {
-            // 超出范围，停止移动
+            // 瓒呭嚭鑼冨洿锛屽仠姝㈢Щ鍔?
             agent.ResetPath();
         }
 
-        // 更新控制器的移动方向（用于动画）
+        // 鏇存柊鎺у埗鍣ㄧ殑绉诲姩鏂瑰悜锛堢敤浜庡姩鐢伙級
         if (agent.velocity.sqrMagnitude > 0.1f)
         {
             controller.MovementDirection = new Vector2(agent.velocity.x, agent.velocity.y).normalized;
@@ -80,7 +80,7 @@ public class Enemy : Character
         }
     }
 
-    // 面向目标
+    // 闈㈠悜鐩爣
     private void FaceTarget(Vector3 targetPosition)
     {
         Vector2 direction = (targetPosition - transform.position).normalized;
@@ -101,9 +101,11 @@ public class Enemy : Character
     {
         Gizmos.color = Color.yellow;
         Gizmos.DrawWireSphere(transform.position, chaseDistance);
+        //鏄剧ず杩藉嚮璺濈
 
         Gizmos.color = Color.red;
         Gizmos.DrawWireSphere(transform.position, attackDistance);
+        //鏄剧ず鏀诲嚮璺濈
     }
 }
     

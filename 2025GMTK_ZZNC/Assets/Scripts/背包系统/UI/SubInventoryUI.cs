@@ -1,6 +1,5 @@
 using UnityEngine;
 using UnityEngine.UI;
-using InventorySystem.Core;
 using InventorySystem.Data;
 using InventorySystem.Managers;
 using System.Collections.Generic;
@@ -10,7 +9,7 @@ using TMPro;
 namespace InventorySystem.UI
 {
     /// <summary>
-    /// 子背包UI管理器 - 管理单个子背包的显示和滑动功能
+    /// 子背包UI管理�? - 管理单个子背包的显示和滑动功�?
     /// </summary>
     public class SubInventoryUI : MonoBehaviour
     {
@@ -24,9 +23,9 @@ namespace InventorySystem.UI
 
         [Header("配置")]
         [SerializeField] private ItemType itemType;
-        [SerializeField] private int maxDisplaySlots = 20; // 最多显示的格子数
+        [SerializeField] private int maxDisplaySlots = 20; // 最多显示的格子�?
         [SerializeField] private int expandSlotsAmount = 5; // 每次扩充的格子数
-        [SerializeField] private int initialSlots = 10; // 初始格子数
+        [SerializeField] private int initialSlots = 10; // 初始格子�?
 
         [Header("统计信息")]
         [SerializeField] private TextMeshProUGUI statsText;
@@ -38,7 +37,7 @@ namespace InventorySystem.UI
         private int currentSlotCount;
         private bool isInitialized = false;
 
-        // 属性
+        // 属�?
         public ItemType ItemType => itemType;
         public int CurrentSlotCount => currentSlotCount;
         public int MaxDisplaySlots => maxDisplaySlots;
@@ -56,15 +55,15 @@ namespace InventorySystem.UI
         /// </summary>
         private void InitializeSubInventory()
         {
-            // 获取背包管理器
+            // 获取背包管理�?
             inventoryManager = InventoryManager.Instance;
             if (inventoryManager == null)
             {
-                Debug.LogError($"找不到InventoryManager实例，无法初始化{itemType}子背包");
+                Debug.LogError($"找不到InventoryManager实例，无法初始化{itemType}子背�?");
                 return;
             }
 
-            // 初始化数据结构
+            // 初始化数据结�?
             slotUIs = new List<InventorySlotUI>();
             currentSlotCount = initialSlots;
 
@@ -76,7 +75,7 @@ namespace InventorySystem.UI
 
             isInitialized = true;
 
-            Debug.Log($"{itemType}子背包UI初始化完成，初始格子数: {initialSlots}");
+            Debug.Log($"{itemType}子背包UI初始化完成，初始格子�?: {initialSlots}");
         }
 
         /// <summary>
@@ -86,7 +85,7 @@ namespace InventorySystem.UI
         {
             if (scrollRect != null)
             {
-                // 设置滑动面板属性
+                // 设置滑动面板属�?
                 scrollRect.horizontal = false;
                 scrollRect.vertical = true;
                 scrollRect.movementType = ScrollRect.MovementType.Clamped;
@@ -97,7 +96,7 @@ namespace InventorySystem.UI
 
             if (contentSizeFitter != null)
             {
-                // 设置内容大小适配器
+                // 设置内容大小适配�?
                 contentSizeFitter.verticalFit = ContentSizeFitter.FitMode.PreferredSize;
                 contentSizeFitter.horizontalFit = ContentSizeFitter.FitMode.PreferredSize;
             }
@@ -111,7 +110,7 @@ namespace InventorySystem.UI
         {
             if (contentContainer == null || slotPrefab == null)
             {
-                Debug.LogError("内容容器或格子预制体未设置");
+                Debug.LogError("内容容器或格子预制体未设�?");
                 return;
             }
 
@@ -120,7 +119,7 @@ namespace InventorySystem.UI
 
             if (newSlotsNeeded <= 0) return;
 
-            // 创建新格子
+            // 创建新格�?
             for (int i = 0; i < newSlotsNeeded; i++)
             {
                 GameObject slotObj = Instantiate(slotPrefab, contentContainer);
@@ -134,11 +133,11 @@ namespace InventorySystem.UI
                 }
             }
 
-            Debug.Log($"为{itemType}子背包创建了{newSlotsNeeded}个新格子，总计{slotUIs.Count}个格子");
+            Debug.Log($"为{itemType}子背包创建了{newSlotsNeeded}个新格子，总计{slotUIs.Count}个格�?");
         }
 
         /// <summary>
-        /// 刷新子背包显示
+        /// 刷新子背包显�?
         /// </summary>
         public void RefreshDisplay()
         {
@@ -146,7 +145,7 @@ namespace InventorySystem.UI
 
             var allSlots = inventoryManager.GetAllSlotsByType(itemType);
 
-            // 检查是否需要扩充格子
+            // 检查是否需要扩充格�?
             CheckAndExpandSlots(allSlots.Count);
 
             // 更新格子显示
@@ -172,7 +171,7 @@ namespace InventorySystem.UI
         /// <summary>
         /// 检查并扩充格子
         /// </summary>
-        /// <param name="requiredSlots">需要的格子数</param>
+        /// <param name="requiredSlots">需要的格子�?</param>
         private void CheckAndExpandSlots(int requiredSlots)
         {
             if (requiredSlots > currentSlotCount)
@@ -189,7 +188,7 @@ namespace InventorySystem.UI
         /// <summary>
         /// 更新统计信息
         /// </summary>
-        /// <param name="usedSlots">已使用的格子数</param>
+        /// <param name="usedSlots">已使用的格子�?</param>
         private void UpdateStats(int usedSlots)
         {
             if (statsText != null)
@@ -225,7 +224,7 @@ namespace InventorySystem.UI
         }
 
         /// <summary>
-        /// 设置子背包可见性
+        /// 设置子背包可见�?
         /// </summary>
         /// <param name="visible">是否可见</param>
         public void SetVisible(bool visible)
@@ -234,7 +233,7 @@ namespace InventorySystem.UI
         }
 
         /// <summary>
-        /// 滚动到指定格子
+        /// 滚动到指定格�?
         /// </summary>
         /// <param name="slotIndex">格子索引</param>
         public void ScrollToSlot(int slotIndex)
@@ -247,7 +246,7 @@ namespace InventorySystem.UI
         }
 
         /// <summary>
-        /// 滚动到顶部
+        /// 滚动到顶�?
         /// </summary>
         public void ScrollToTop()
         {
@@ -258,7 +257,7 @@ namespace InventorySystem.UI
         }
 
         /// <summary>
-        /// 滚动到底部
+        /// 滚动到底�?
         /// </summary>
         public void ScrollToBottom()
         {
@@ -292,7 +291,7 @@ namespace InventorySystem.UI
         }
 
         /// <summary>
-        /// 清空所有格子
+        /// 清空所有格�?
         /// </summary>
         public void ClearAllSlots()
         {
@@ -303,9 +302,9 @@ namespace InventorySystem.UI
         }
 
         /// <summary>
-        /// 设置格子交互性
+        /// 设置格子交互�?
         /// </summary>
-        /// <param name="interactable">是否可交互</param>
+        /// <param name="interactable">是否可交�?</param>
         public void SetSlotsInteractable(bool interactable)
         {
             foreach (var slotUI in slotUIs)
@@ -315,18 +314,18 @@ namespace InventorySystem.UI
         }
 
         /// <summary>
-        /// 获取子背包统计信息
+        /// 获取子背包统计信�?
         /// </summary>
-        /// <returns>统计信息字符串</returns>
+        /// <returns>统计信息字符�?</returns>
         public string GetSubInventoryStats()
         {
-            if (inventoryManager == null) return "背包管理器未初始化";
+            if (inventoryManager == null) return "背包管理器未初始�?";
 
             var allSlots = inventoryManager.GetAllSlotsByType(itemType);
             int usedSlots = allSlots.Count(slot => !slot.IsEmpty);
             int totalSlots = allSlots.Count;
 
-            return $"{GetItemTypeDisplayName(itemType)}背包: {usedSlots}个物品 ({totalSlots}个格子)";
+            return $"{GetItemTypeDisplayName(itemType)}背包: {usedSlots}个物�? ({totalSlots}个格�?)";
         }
     }
 } 

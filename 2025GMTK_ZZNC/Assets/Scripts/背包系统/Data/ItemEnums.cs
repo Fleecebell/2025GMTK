@@ -1,5 +1,3 @@
-using UnityEngine;
-
 namespace InventorySystem.Data
 {
     /// <summary>
@@ -30,7 +28,7 @@ namespace InventorySystem.Data
     }
 
     /// <summary>
-    /// 属性类型枚举
+    /// 属性类型枚�?
     /// </summary>
     public enum AttributeType
     {
@@ -39,6 +37,6 @@ namespace InventorySystem.Data
         intelligence,         // 智力
         attackSpeed,        // 攻击速度
         moveSpeed,      // 移动速度
-        critical,   // 暴击率
+        critical,   // 暴击�?
     }
 }

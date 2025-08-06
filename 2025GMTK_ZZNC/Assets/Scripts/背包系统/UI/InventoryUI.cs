@@ -5,13 +5,12 @@ using InventorySystem.Core;
 using InventorySystem.Data;
 using InventorySystem.Items;
 using TMPro;
-using System.Collections.Generic;
 
 namespace InventorySystem.UI
 {
     /// <summary>
-    /// 背包UI管理器 - 负责三个子背包的显示和交互
-    /// 每个子背包最多显示20个格子，通过滑动面板查看更多
+    /// 背包UI管理�? - 负责三个子背包的显示和交�?
+    /// 每个子背包最多显�?20个格子，通过滑动面板查看更多
     /// </summary>
     public class InventoryUI : MonoBehaviour
     {
@@ -32,7 +31,7 @@ namespace InventorySystem.UI
         [SerializeField] private SubInventoryUI equipmentSubInventory;
         [SerializeField] private SubInventoryUI consumableSubInventory;
 
-        [Header("标签页")]
+        [Header("标签�?")]
         [SerializeField] private Button weaponTabButton;
         [SerializeField] private Button equipmentTabButton;
         [SerializeField] private Button consumableTabButton;
@@ -48,7 +47,7 @@ namespace InventorySystem.UI
         private ItemType currentTab = ItemType.Weapon;
         private CanvasGroup itemInfoCanvasGroup;
         private CanvasGroup inventoryCanvasGroup;
-        [Header("快捷键")]
+        [Header("快捷�?")]
         [SerializeField] private KeyCode toggleKey = KeyCode.Escape;
 
         /// <summary>
@@ -75,7 +74,7 @@ namespace InventorySystem.UI
                     OpenInventory();
             }
 
-            // 背包打开时，监听 1/2/3 切换子背包
+            // 背包打开时，监听 1/2/3 切换子背�?
             if (inventoryCanvasGroup != null && inventoryCanvasGroup.alpha > 0.5f)
             {
                 if (Input.GetKeyDown(KeyCode.Alpha1) || Input.GetKeyDown(KeyCode.Keypad1))
@@ -93,7 +92,7 @@ namespace InventorySystem.UI
         /// </summary>
         private void InitializeUI()
         {
-            // 获取背包管理器
+            // 获取背包管理�?
             inventoryManager = InventoryManager.Instance;
             if (inventoryManager == null)
             {
@@ -107,12 +106,12 @@ namespace InventorySystem.UI
             // 初始化背包面板CanvasGroup
             InitializeInventoryPanel();
 
-            // 设置默认标签页
+            // 设置默认标签�?
             SetActiveTab(ItemType.Weapon);
         }
 
         /// <summary>
-        /// 初始化物品信息面板
+        /// 初始化物品信息面�?
         /// </summary>
         private void InitializeItemInfoPanel()
         {
@@ -125,7 +124,7 @@ namespace InventorySystem.UI
                     itemInfoCanvasGroup = itemInfoPanel.AddComponent<CanvasGroup>();
                 }
 
-                // 设置初始状态
+                // 设置初始状�?
                 itemInfoCanvasGroup.alpha = 0f;
                 itemInfoCanvasGroup.interactable = false;
                 itemInfoCanvasGroup.blocksRaycasts = false;
@@ -133,7 +132,7 @@ namespace InventorySystem.UI
         }
 
         /// <summary>
-        /// 初始化背包面板
+        /// 初始化背包面�?
         /// </summary>
         private void InitializeInventoryPanel()
         {
@@ -146,7 +145,7 @@ namespace InventorySystem.UI
                     inventoryCanvasGroup = inventoryPanel.AddComponent<CanvasGroup>();
                 }
 
-                // 设置初始状态
+                // 设置初始状�?
                 inventoryCanvasGroup.alpha = 0f;
                 inventoryCanvasGroup.interactable = false;
                 inventoryCanvasGroup.blocksRaycasts = false;
@@ -165,7 +164,7 @@ namespace InventorySystem.UI
             if (minimizeButton != null)
                 minimizeButton.onClick.AddListener(CloseInventory);
 
-            // 标签页按钮事件
+            // 标签页按钮事�?
             if (weaponTabButton != null)
                 weaponTabButton.onClick.AddListener(() => SetActiveTab(ItemType.Weapon));
 
@@ -179,7 +178,7 @@ namespace InventorySystem.UI
             if (weaponSlotButton != null)
                 weaponSlotButton.onClick.AddListener(OnWeaponSlotClicked);
 
-            // 背包管理器事件
+            // 背包管理器事�?
             if (inventoryManager != null)
             {
                 inventoryManager.OnInventoryChanged += RefreshUI;
@@ -227,7 +226,7 @@ namespace InventorySystem.UI
         }
 
         /// <summary>
-        /// 设置活动标签页
+        /// 设置活动标签�?
         /// </summary>
         /// <param name="itemType">物品类型</param>
         public void SetActiveTab(ItemType itemType)
@@ -238,7 +237,7 @@ namespace InventorySystem.UI
         }
 
         /// <summary>
-        /// 更新标签页按钮状态
+        /// 更新标签页按钮状�?
         /// </summary>
         private void UpdateTabButtons()
         {
@@ -248,10 +247,10 @@ namespace InventorySystem.UI
         }
 
         /// <summary>
-        /// 设置按钮状态
+        /// 设置按钮状�?
         /// </summary>
         /// <param name="button">按钮</param>
-        /// <param name="isActive">是否激活</param>
+        /// <param name="isActive">是否激�?</param>
         private void SetButtonState(Button button, bool isActive)
         {
             if (button != null)
@@ -263,7 +262,7 @@ namespace InventorySystem.UI
         }
 
         /// <summary>
-        /// 更新子背包可见性
+        /// 更新子背包可见�?
         /// </summary>
         private void UpdateSubInventoryVisibility()
         {
@@ -403,21 +402,21 @@ namespace InventorySystem.UI
                         if (weaponData != null)
                         {
                             Debug.Log($"调用inventoryManager.UseItem - currentTab: {currentTab}, slotIndex: {slotIndex}");
-                            // 记录当前装备的武器
+                            // 记录当前装备的武�?
                             var currentWeapon = inventoryManager.EquipmentManager.CurrentWeapon;
 
-                            // 如果原本有装备武器，则放回背包
+                            // 如果原本有装备武器，则放回背�?
                             if (currentWeapon != null)
                             {
                                 inventoryManager.AddItem(currentWeapon, 1);
                                 Debug.Log($"将原装备武器放回背包: {currentWeapon.ItemName}");
                             }
 
-                            // 先从背包移除该武器
+                            // 先从背包移除该武�?
                             int removed = inventoryManager.RemoveItem(weaponData, 1);
-                            Debug.Log($"从背包移除武器: {weaponData.ItemName}，移除数量: {removed}");
+                            Debug.Log($"从背包移除武�?: {weaponData.ItemName}，移除数�?: {removed}");
 
-                            // 装备新武器
+                            // 装备新武�?
                             bool useResult = inventoryManager.UseWeapon(weaponData);
                             Debug.Log($"武器使用结果: {useResult}");
                         }
@@ -471,7 +470,7 @@ namespace InventorySystem.UI
             catch (System.Exception ex)
             {
                 Debug.LogError($"UseItem异常: {ex.Message}\n{ex.StackTrace}");
-                Debug.LogError($"异常发生时的状态 - inventoryManager为null: {inventoryManager == null}, currentTab: {currentTab}, item: {item?.ItemName}");
+                Debug.LogError($"异常发生时的状�? - inventoryManager为null: {inventoryManager == null}, currentTab: {currentTab}, item: {item?.ItemName}");
             }
         }
 
@@ -499,7 +498,7 @@ namespace InventorySystem.UI
             var unequippedWeapon = inventoryManager.EquipmentManager.UnequipWeapon();
             if (unequippedWeapon != null)
             {
-                // 将武器放回背包
+                // 将武器放回背�?
                 inventoryManager.AddItem(unequippedWeapon, 1);
                 Debug.Log($"卸下武器: {unequippedWeapon.ItemName}");
             }
@@ -552,7 +551,7 @@ namespace InventorySystem.UI
         }
 
         /// <summary>
-        /// 在鼠标位置显示信息面板
+        /// 在鼠标位置显示信息面�?
         /// </summary>
         private void PositionInfoPanelAtMouse()
         {
@@ -608,7 +607,7 @@ namespace InventorySystem.UI
         }
 
         /// <summary>
-        /// 带动画显示物品信息
+        /// 带动画显示物品信�?
         /// </summary>
         /// <param name="item">物品数据</param>
         /// <param name="duration">动画时长</param>
@@ -633,12 +632,12 @@ namespace InventorySystem.UI
             itemInfoPanel.SetActive(true);
             PositionInfoPanelAtMouse();
 
-            // 开始淡入动画
+            // 开始淡入动�?
             StartCoroutine(FadeInInfoPanel(duration));
         }
 
         /// <summary>
-        /// 带动画隐藏物品信息
+        /// 带动画隐藏物品信�?
         /// </summary>
         /// <param name="duration">动画时长</param>
         public void HideItemInfoWithAnimation(float duration = 0.15f)
@@ -714,7 +713,7 @@ namespace InventorySystem.UI
         }
 
         /// <summary>
-        /// 获取标签页显示名称
+        /// 获取标签页显示名�?
         /// </summary>
         /// <param name="itemType">物品类型</param>
         /// <returns>显示名称</returns>
